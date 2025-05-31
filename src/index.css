@@ -1,0 +1,17 @@
+/* src/index.css */
+/* 这里可以添加全局 CSS 样式 */
+
+body {
+  font-family: sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 20px;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+h1 {
+  color: #0056b3;
+  text-align: center;
+  margin-bottom: 30px;
+} 
