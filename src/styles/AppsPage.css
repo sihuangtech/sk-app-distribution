@@ -1,0 +1,67 @@
+.apps-page {
+  min-height: calc(100vh - 140px); /* 减去导航栏和底部的高度 */
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 40px 20px;
+}
+
+.apps-page-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.apps-page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.apps-page-header h2 {
+  color: #2c3e50;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.apps-page-header p {
+  color: #7f8c8d;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.apps-stats {
+  display: inline-block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 500;
+}
+
+.apps-count {
+  font-size: 14px;
+}
+
+.apps-page-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .apps-page {
+    padding: 20px 15px;
+  }
+  
+  .apps-page-header h2 {
+    font-size: 24px;
+  }
+  
+  .apps-page-header p {
+    font-size: 16px;
+  }
+  
+  .apps-stats {
+    padding: 8px 16px;
+  }
+} 

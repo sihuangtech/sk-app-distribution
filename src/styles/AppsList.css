@@ -1,0 +1,219 @@
+/* src/components/AppsList.css */
+
+.apps-list-section {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.apps-list-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.apps-list-header h2 {
+  margin: 0;
+  color: #1f2937;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.loading-message {
+  text-align: center;
+  color: #6b7280;
+  padding: 40px 20px;
+  font-size: 16px;
+}
+
+.empty-message {
+  text-align: center;
+  color: #6b7280;
+  padding: 40px 20px;
+}
+
+.empty-message p {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.empty-message small {
+  font-size: 14px;
+  color: #9ca3af;
+}
+
+.apps-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+  padding-right: 4px;
+}
+
+.app-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.app-card:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.app-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.app-display-name {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  flex: 1;
+  margin-right: 8px;
+  line-height: 1.3;
+}
+
+.app-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.edit-button:hover:not(:disabled) {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.edit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-button {
+  background: none;
+  border: none;
+  color: #dc2626;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  width: auto;
+  height: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.delete-button:hover:not(:disabled) {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.delete-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  font-size: 10px;
+}
+
+.app-card-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.app-card-body p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 200px;
+}
+
+.app-name {
+  color: #374151;
+}
+
+.app-description {
+  color: #6b7280;
+}
+
+.app-created-at {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* 滚动条样式 */
+.apps-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.apps-grid::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.apps-grid::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.apps-grid::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .apps-grid {
+    max-height: calc(100vh - 180px);
+  }
+  
+  .apps-list-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .app-card-body {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .app-card-body p {
+    min-width: auto;
+  }
+} 

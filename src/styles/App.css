@@ -1,0 +1,558 @@
+/* src/App.css */
+/* 这里可以添加 App 组件的 CSS 样式 */
+
+/* 移除 app-container 样式 */
+/*
+.app-container {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+*/
+
+.page-layout {
+  max-width: 1000px; /* 调整页面最大宽度 */
+  margin: 40px auto; /* 居中显示 */
+  padding: 0 20px; /* 左右内边距 */
+}
+
+.content-container {
+  display: flex;
+  gap: 40px;
+}
+
+.file-list-section,
+.upload-form-section {
+  flex: 1;
+  padding: 20px; /* 添加内边距 */
+  border: 1px solid #ccc; /* 添加边框 */
+  border-radius: 8px; /* 添加圆角 */
+  background-color: #fff; /* 添加白色背景 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* 添加轻微阴影 */
+}
+
+/* 移除 div 的底部外边距，让各个部分之间的间距由 section-box 的 padding 控制 */
+div {
+  margin-bottom: 0;
+}
+
+/* 为需要底部间距的 div 添加样式 */
+.upload-form-section > div {
+    margin-bottom: 20px; /* 恢复上传表单内部 div 的底部外边距 */
+}
+
+.upload-form-section > div:not(.radio-group):not(.download-link-container) {
+  display: flex; /* 使用 Flexbox */
+  align-items: center; /* 垂直居中对齐 */
+  gap: 15px; /* 标签和选择框之间的间距 */
+  margin-bottom: 20px; /* 保持底部外边距 */
+}
+
+.upload-form-section label {
+  /* 标签样式调整 */
+  margin-bottom: 0; /* 移除底部外边距 */
+  flex-shrink: 0; /* 防止标签收缩 */
+  width: 80px; /* 给标签一个固定宽度，或者根据内容调整 */
+}
+
+.upload-form-section select {
+  flex-grow: 1; /* 让选择框填充剩余空间 */
+  width: auto; /* 宽度自适应Flex容器 */
+  margin-bottom: 0; /* 移除底部外边距 */
+}
+
+/* 调整文件选择框和上传按钮的样式，确保它们仍然独占一行 */
+.upload-form-section input[type="file"],
+.upload-form-section button {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10px; /* 保持底部外边距 */
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+}
+
+select,
+input[type="file"],
+button {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+input[type="file"] {
+  padding: 12px 10px;
+  background-color: #e9e9e9;
+  cursor: pointer;
+}
+
+button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #218838;
+}
+
+.radio-group div {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 0;
+}
+
+.radio-group label {
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: normal;
+}
+
+.radio-group input[type="radio"] {
+    display: inline-block;
+    width: auto;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.download-link-container {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.download-link-container p {
+    margin-top: 0;
+    font-weight: bold;
+    color: #555;
+}
+
+/* App.css */
+
+/* 全局样式重置 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+/* 应用布局 */
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* 加载状态 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.loading-spinner {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* 上传表单样式 */
+.upload-form-section {
+  padding: 40px;
+}
+
+.upload-form-section h2 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.upload-form-section > div {
+  margin-bottom: 20px;
+}
+
+.upload-form-section label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.upload-form-section select,
+.upload-form-section input[type="file"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  background-color: white;
+}
+
+.upload-form-section select:focus,
+.upload-form-section input[type="file"]:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.upload-form-section select:disabled,
+.upload-form-section input[type="file"]:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.radio-group {
+  margin-bottom: 20px;
+}
+
+.radio-group > label {
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.radio-group > div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.radio-group input[type="radio"] {
+  margin-right: 8px;
+  width: auto;
+}
+
+.radio-group input[type="radio"] + label {
+  margin-bottom: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.upload-form-section button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 10px;
+}
+
+.upload-form-section button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.upload-form-section button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.download-link-container {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.download-link-container p {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #495057;
+}
+
+.download-link-container a {
+  color: #667eea;
+  text-decoration: none;
+  word-break: break-all;
+  font-weight: 500;
+}
+
+.download-link-container a:hover {
+  text-decoration: underline;
+}
+
+/* 文件列表样式 */
+.file-list-section {
+  padding: 40px;
+}
+
+.file-list-section h2 {
+  color: #2c3e50;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.file-list {
+  list-style: none;
+  padding: 0;
+}
+
+.file-item {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.file-item:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.file-name {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.file-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  flex: 1;
+}
+
+.file-link:hover {
+  text-decoration: underline;
+}
+
+.file-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.upload-time {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+}
+
+.delete-button:active {
+  transform: translateY(0);
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.empty-state h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.empty-state p {
+  font-size: 16px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .upload-form-section,
+  .file-list-section {
+    padding: 20px;
+  }
+  
+  .upload-form-section h2,
+  .file-list-section h2 {
+    font-size: 20px;
+  }
+}
+
+/* 表单行和列布局 */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-col label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.form-col select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.form-col select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-col select:disabled {
+  background-color: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+/* 内联单选按钮组 */
+.radio-group-inline {
+  display: flex;
+  gap: 16px;
+  margin-top: 6px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  margin: 0;
+}
+
+.radio-label input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+}
+
+.radio-label input[type="radio"]:disabled {
+  cursor: not-allowed;
+}
+
+/* 响应式表单布局 */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .radio-group-inline {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .radio-group-inline {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+/* 应用选择器和新建按钮的容器样式 */
+.app-selector-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.app-selector-container select {
+  flex: 1;
+  min-width: 0;
+}
+
+.create-app-button {
+  padding: 6px 8px !important;
+  background-color: #3b82f6 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  width: auto !important;
+  margin-bottom: 0 !important;
+}
+
+/* 加载提示文本样式 */
+.loading-text {
+  color: #6b7280;
+} 

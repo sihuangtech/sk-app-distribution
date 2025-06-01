@@ -1,0 +1,96 @@
+.upload-page {
+  flex: 1;
+  padding: 20px;
+  background-color: #f8fafc;
+  overflow: hidden;
+}
+
+.upload-page-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  height: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.apps-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.upload-section {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  overflow: auto;
+}
+
+.upload-page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.upload-page-header h2 {
+  color: #2c3e50;
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.upload-page-header p {
+  color: #7f8c8d;
+  font-size: 18px;
+  margin: 0;
+}
+
+.upload-page-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .upload-page-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+  }
+  
+  .apps-section {
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-page {
+    padding: 16px;
+  }
+  
+  .upload-page-container {
+    gap: 16px;
+  }
+  
+  .apps-section,
+  .upload-section {
+    padding: 20px;
+  }
+  
+  .upload-page-header h2 {
+    font-size: 24px;
+  }
+  
+  .upload-page-header p {
+    font-size: 16px;
+  }
+} 
