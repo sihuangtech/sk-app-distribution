@@ -89,7 +89,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(process.cwd(), 'dist')));
 
   // SPA路由处理（必须在文件下载路由之后）
-  app.get('(.*)', (req: Request, res: Response) => {
+  app.get('/*path', (req: Request, res: Response) => {
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
   });
 }
