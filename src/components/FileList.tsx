@@ -137,13 +137,10 @@ function FileList({ files, onFileDeleted }: FileListProps) {
 
   const handleFileClick = async (filePath: string) => {
     try {
-      const apiBaseUrl = await getApiBaseUrl();
-      const url = `${apiBaseUrl}${filePath}`;
-      window.open(url, '_blank');
-    } catch (error) {
-      console.error('获取下载链接失败:', error);
-      // 如果获取配置失败，直接使用相对路径
+      // 直接使用后端返回的完整链接
       window.open(filePath, '_blank');
+    } catch (error) {
+      console.error('打开下载链接失败:', error);
     }
   };
 
