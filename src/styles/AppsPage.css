@@ -28,16 +28,33 @@
 }
 
 .apps-stats {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 25px;
   font-weight: 500;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.apps-count {
+.apps-count,
+.apps-size {
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.apps-count::before {
+  content: "📁";
+  font-size: 16px;
+}
+
+.apps-size::before {
+  content: "💾";
+  font-size: 16px;
 }
 
 .apps-page-content {

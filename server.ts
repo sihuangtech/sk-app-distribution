@@ -13,6 +13,7 @@ import authRouter from './src/routes/auth.ts';
 import configRouter from './src/routes/config.ts';
 import appsRouter from './src/routes/apps.ts';
 import settingsRouter from './src/routes/settings.ts';
+import versionRouter from './src/routes/version.ts';
 import { verifyToken } from './src/middleware/auth.ts';
 
 const app = express();
@@ -35,8 +36,11 @@ const port = config.server.backend_port;
 // 允许跨域请求
 app.use(cors());
 
-// 解析JSON请求体
-app.use(express.json());
+// 配置请求体解析中间件，支持大文件上传
+const maxFileSize = config.upload.max_file_size * 1024 * 1024; // 从config.yaml读取，转换为字节
+app.use(express.json({ limit: maxFileSize }));
+app.use(express.urlencoded({ extended: true, limit: maxFileSize }));
+app.use(express.raw({ limit: maxFileSize }));
 
 // 创建 uploads 目录（如果不存在）
 const uploadsDir = path.join(process.cwd(), 'uploads');
@@ -55,6 +59,7 @@ app.use('/upload', verifyToken(config), uploadRouter(config));
 app.use('/list', verifyToken(config), listRouter);
 app.use('/api/apps', verifyToken(config), appsRouter());
 app.use('/api/settings', verifyToken(config), settingsRouter(config));
+app.use('/api/version', verifyToken(config), versionRouter);
 
 // 下载路由（不需要认证，允许公开下载）
 app.use('/download', downloadRouter(config));

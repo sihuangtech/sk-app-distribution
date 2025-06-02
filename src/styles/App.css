@@ -44,7 +44,7 @@ div {
     margin-bottom: 20px; /* 恢复上传表单内部 div 的底部外边距 */
 }
 
-.upload-form-section > div:not(.radio-group):not(.download-link-container) {
+.upload-form-section > div:not(.radio-group):not(.download-link-container):not(.file-input-container) {
   display: flex; /* 使用 Flexbox */
   align-items: center; /* 垂直居中对齐 */
   gap: 15px; /* 标签和选择框之间的间距 */
@@ -379,13 +379,14 @@ body {
 .file-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
-.upload-time {
+.upload-time,
+.file-size {
   color: #6c757d;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 12px;
   white-space: nowrap;
 }
 
@@ -753,21 +754,19 @@ body {
   border-radius: 4px;
   font-size: 13px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .file-name {
   font-weight: 500;
   color: #0056b3;
-  flex: 1;
-  margin-right: 12px;
   word-break: break-all;
 }
 
 .file-size {
   color: #495057;
-  white-space: nowrap;
+  font-size: 12px;
 }
 
 /* 响应式设计 */
@@ -775,15 +774,5 @@ body {
   .limit-info {
     flex-direction: column;
     gap: 2px;
-  }
-  
-  .selected-file-info {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  
-  .file-name {
-    margin-right: 0;
   }
 } 

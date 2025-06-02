@@ -323,11 +323,11 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
           </div>
         </div>
         
-        <div>
-          <label htmlFor="file-input">选择文件:</label>
+        <div className="file-input-container">
           <input 
             type="file" 
             id="file-input"
+            aria-label="选择文件"
             onChange={handleFileChange} 
             disabled={uploading} 
           />
@@ -345,7 +345,7 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
           )}
           {selectedFile && (
             <div className="selected-file-info">
-              <span className="file-name">已选择: {selectedFile.name}</span>
+              <span className="file-name">{selectedFile.name}</span>
               <span className="file-size">大小: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</span>
             </div>
           )}

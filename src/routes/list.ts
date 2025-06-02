@@ -25,6 +25,7 @@ interface FileWithMetadata {
   os: string;
   architecture: string;
   versionType: string;
+  size: number;
 }
 
 // 文件元数据存储路径
@@ -89,7 +90,8 @@ const getFilesWithMetadata = (): FileWithMetadata[] => {
             application: fileMetadata.application,
             os: fileMetadata.os,
             architecture: fileMetadata.architecture,
-            versionType: fileMetadata.versionType
+            versionType: fileMetadata.versionType,
+            size: fileStat.size
           });
           validMetadata.push(fileMetadata);
         } else {
@@ -101,7 +103,8 @@ const getFilesWithMetadata = (): FileWithMetadata[] => {
             application: '未知',
             os: '未知',
             architecture: '未知',
-            versionType: '未知'
+            versionType: '未知',
+            size: fileStat.size
           });
         }
       }
@@ -126,7 +129,18 @@ router.get('/', (req: Request, res: Response) => {
     const files = getFilesWithMetadata();
     // 按上传时间倒序排列（最新的在前面）
     files.sort((a, b) => new Date(b.uploadTime).getTime() - new Date(a.uploadTime).getTime());
-    res.status(200).json(files);
+    
+    // 计算总文件大小
+    const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+    
+    // 返回文件列表和统计信息
+    res.status(200).json({
+      files,
+      stats: {
+        totalFiles: files.length,
+        totalSize: totalSize
+      }
+    });
   } catch (err: any) {
     console.error('Failed to get file list:', err);
     res.status(500).send('获取文件列表失败。');

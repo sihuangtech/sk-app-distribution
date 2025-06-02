@@ -26,7 +26,7 @@ server {
     # SSL 证书路径 (Certbot 会自动配置)
     ssl_certificate /etc/letsencrypt/live/download.skstudio.cn/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/download.skstudio.cn/privkey.pem;
-sk-
+
     # 前端静态文件
     location / {
         root /var/www/sk-app-distribution/dist;  # 替换为你的项目路径
@@ -40,7 +40,7 @@ sk-
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        client_max_body_size 500M;  # 文件上传大小限制
+        client_max_body_size 6G;  # 文件上传大小限制，与config.yaml中的max_file_size保持一致
     }
 }
 ```

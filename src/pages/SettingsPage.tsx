@@ -46,6 +46,16 @@ const SettingsPage: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   // 初始化 editConfig 时，确保 download 属性存在并有默认值
   const [editConfig, setEditConfig] = useState<SystemConfig | null>(null);
+  const [versionInfo, setVersionInfo] = useState<{
+    project: string;
+    node: string;
+    react: string;
+    express: string;
+    typescript: string;
+    vite: string;
+    startTime: string;
+    mode: string;
+  } | null>(null);
   const [toast, setToast] = useState<{
     message: string;
     type: 'success' | 'error' | 'info';
@@ -66,6 +76,27 @@ const SettingsPage: React.FC = () => {
 
   const hideToast = () => {
     setToast(prev => ({ ...prev, isVisible: false }));
+  };
+
+  // 获取版本信息
+  const fetchVersionInfo = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const apiBaseUrl = await getApiBaseUrl();
+      
+      const response = await fetch(`${apiBaseUrl}/api/version`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const versionData = await response.json();
+        setVersionInfo(versionData);
+      }
+    } catch (error) {
+      console.error('获取版本信息失败:', error);
+    }
   };
 
   // 获取系统配置
@@ -193,6 +224,7 @@ const SettingsPage: React.FC = () => {
 
   useEffect(() => {
     fetchConfig();
+    fetchVersionInfo();
   }, []);
 
   if (loading) {
@@ -437,6 +469,53 @@ const SettingsPage: React.FC = () => {
                     </span>
                   )}
                 </div>
+              </div>
+            </div>
+
+            {/* 版本信息 */}
+            <div className="settings-section version-info">
+              <h3>版本信息</h3>
+              <div className="version-grid">
+                {versionInfo?.project && (
+                  <div className="setting-item">
+                    <label>项目版本: {versionInfo.project}</label>
+                  </div>
+                )}
+                {versionInfo?.node && (
+                  <div className="setting-item">
+                    <label>Node.js: {versionInfo.node}</label>
+                  </div>
+                )}
+                {versionInfo?.react && (
+                  <div className="setting-item">
+                    <label>React: {versionInfo.react}</label>
+                  </div>
+                )}
+                {versionInfo?.express && (
+                  <div className="setting-item">
+                    <label>Express: {versionInfo.express}</label>
+                  </div>
+                )}
+                {versionInfo?.typescript && (
+                  <div className="setting-item">
+                    <label>TypeScript: {versionInfo.typescript}</label>
+                  </div>
+                )}
+                {versionInfo?.vite && (
+                  <div className="setting-item">
+                    <label>Vite: {versionInfo.vite}</label>
+                  </div>
+                )}
+                {versionInfo?.startTime && (
+                  <div className="setting-item">
+                    <label>启动时间: {versionInfo.startTime}</label>
+                  </div>
+                )}
+                {versionInfo?.mode && (
+                  <div className="setting-item">
+                    <label>运行模式: {versionInfo.mode}</label>
+                  </div>
+                )}
               </div>
             </div>
 

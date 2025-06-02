@@ -13,6 +13,7 @@ interface UploadedFile {
   os: string; // 操作系统
   architecture: string; // 架构
   versionType: string; // 版本类型
+  size: number; // 文件大小（字节）
 }
 
 interface FileListProps {
@@ -212,6 +213,17 @@ function FileList({ files, onFileDeleted }: FileListProps) {
     });
   };
 
+  // 格式化文件大小
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 B';
+    
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
   // 清除所有筛选
   const clearFilters = () => {
     setFilters({
@@ -319,6 +331,7 @@ function FileList({ files, onFileDeleted }: FileListProps) {
                     <span className="metadata-item">系统: {getOsLabel(file.os)}</span>
                     <span className="metadata-item">架构: {getArchLabel(file.architecture)}</span>
                     <span className="metadata-item">版本: {getVersionLabel(file.versionType)}</span>
+                    <span className="metadata-item">大小: {formatFileSize(file.size)}</span>
                   </div>
                 </div>
                 <div className="file-actions">

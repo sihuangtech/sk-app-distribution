@@ -355,4 +355,19 @@
 
 .remove-extension-button.delete-button:hover {
   background-color: #c82333; /* Darker red on hover */
+}
+
+/* 版本信息样式 */
+.version-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .version-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
 } 

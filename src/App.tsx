@@ -20,10 +20,17 @@ interface UploadedFile {
   os: string; // 操作系统
   architecture: string; // 架构
   versionType: string; // 版本类型
+  size: number; // 文件大小（字节）
+}
+
+interface FileStats {
+  totalFiles: number;
+  totalSize: number;
 }
 
 function App() {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]); // 存储已上传文件列表
+  const [fileStats, setFileStats] = useState<FileStats>({ totalFiles: 0, totalSize: 0 }); // 文件统计信息
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -58,8 +65,16 @@ function App() {
         },
       });
       if (response.ok) {
-        const files: UploadedFile[] = await response.json();
-        setUploadedFiles(files);
+        const data = await response.json();
+        // 处理新的API响应格式
+        if (data.files && data.stats) {
+          setUploadedFiles(data.files);
+          setFileStats(data.stats);
+        } else {
+          // 兼容旧格式
+          setUploadedFiles(data);
+          setFileStats({ totalFiles: data.length, totalSize: 0 });
+        }
       } else {
         console.error('获取文件列表失败:', response.statusText);
       }
@@ -132,7 +147,7 @@ function App() {
         <main className="main-content">
           <Routes>
             <Route path="/upload" element={<UploadPage onUploadSuccess={handleUploadSuccess} />} />
-            <Route path="/apps" element={<AppsPage files={uploadedFiles} onFileDeleted={fetchFiles} />} />
+            <Route path="/apps" element={<AppsPage files={uploadedFiles} fileStats={fileStats} onFileDeleted={fetchFiles} />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/" element={<Navigate to="/upload" replace />} />
           </Routes>
