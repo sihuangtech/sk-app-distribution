@@ -1,7 +1,7 @@
 {
   "name": "app-distribution-download",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is a project designed for the distribution and downloading of applications, providing a seamless experience for users to access and manage their software.",
   "main": "index.js",
   "scripts": {
     "start": "ts-node --esm server.ts",

@@ -59,40 +59,33 @@ app.use('/api/settings', verifyToken(config), settingsRouter(config));
 // 下载路由（不需要认证，允许公开下载）
 app.use('/download', downloadRouter(config));
 
+// 处理根路径的文件下载请求（统一处理生产和开发环境）
+app.get('/:filename', (req: Request, res: Response, next) => {
+  const filename = req.params.filename;
+  // 检查是否是文件下载请求（包含文件扩展名）
+  if (filename.includes('.')) {
+    // 转发到下载路由处理
+    req.url = `/download/${filename}`;
+    downloadRouter(config)(req, res, next);
+  } else {
+    // 不是文件请求，根据环境处理
+    if (process.env.NODE_ENV === 'production') {
+      // 生产环境：继续到SPA路由处理
+      next();
+    } else {
+      // 开发环境：返回404
+      res.status(404).send('Not found');
+    }
+  }
+});
+
 // 在生产环境中，提供静态文件服务
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(process.cwd(), 'dist')));
 
-  // 处理根路径的文件下载请求（生产环境）
-  app.get('/:filename', (req: Request, res: Response, next) => {
-    const filename = req.params.filename;
-    // 检查是否是文件下载请求（包含文件扩展名）
-    if (filename.includes('.')) {
-      // 转发到下载路由处理
-      req.url = `/download/${filename}`;
-      downloadRouter(config)(req, res, next);
-    } else {
-      // 不是文件请求，继续到下一个中间件（SPA路由）
-      next();
-    }
-  });
-
+  // SPA路由处理（必须在文件下载路由之后）
   app.get('*', (req: Request, res: Response) => {
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
-  });
-} else {
-  // 开发环境：处理根路径的文件下载请求
-  app.get('/:filename', (req: Request, res: Response, next) => {
-    const filename = req.params.filename;
-    // 检查是否是文件下载请求（包含文件扩展名）
-    if (filename.includes('.')) {
-      // 转发到下载路由处理
-      req.url = `/download/${filename}`;
-      downloadRouter(config)(req, res, next);
-    } else {
-      // 不是文件请求，返回404
-      res.status(404).send('Not found');
-    }
   });
 }
 

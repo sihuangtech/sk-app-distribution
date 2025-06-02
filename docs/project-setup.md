@@ -92,19 +92,22 @@ sudo nano /etc/systemd/system/sk-app-distribution.service
 
 ```ini
 [Unit]
-Description=CaiQi Software Distribution Platform Service
+Description=Backend service for the CaiQi Software Distribution Platform
 After=network.target
 
 [Service]
 Type=simple
-User=ubuntu # <mark style="background-color: #ADCCFF;">替换为你的服务器用户名</mark>
-WorkingDirectory=/var/www/sk-app-distribution # <mark style="background-color: #ADCCFF;">替换为你的项目实际部署路径</mark>
-ExecStart=/usr/bin/node --loader ts-node/esm server.ts
+User=ubuntu
+WorkingDirectory=/var/www/sk-app-distribution
+ExecStart=/home/ubuntu/.nvm/versions/node/v24.0.0/bin/node /home/ubuntu/.nvm/versions/node/v24.0.0/bin/npm start
 Restart=always
 RestartSec=10
-StandardOutput=syslog
-StandardError=syslogqianh
+StandardOutput=journal
+StandardError=journal
 SyslogIdentifier=sk-app-distribution
+Environment=NODE_ENV=production
+Environment=PATH=/home/ubuntu/.nvm/versions/node/v24.0.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=NVM_DIR=/home/ubuntu/.nvm
 
 [Install]
 WantedBy=multi-user.target
@@ -113,8 +116,15 @@ WantedBy=multi-user.target
 **注意**:
 - 将 `User` 替换为你希望运行服务的用户，建议创建一个专门用于运行应用的用户。
 - 将 `WorkingDirectory` 替换为你的项目实际部署路径。
-- `ExecStart` 中的路径 `/usr/bin/node` 需要根据你的 Node.js 安装路径确定，可以通过 `which node` 命令查看。
-- 如果你在项目中使用 `npm start` 来启动服务器，`ExecStart` 也可以设置为 `ExecStart=/usr/bin/npm start`，但要确保 `npm` 命令在服务运行用户的 PATH 中。
+- `ExecStart` 现在使用nvm安装的Node.js 24版本的完整路径。请根据你的实际Node.js版本号调整路径（例如 v24.1.0, v24.2.0 等）。
+- 添加了 `PATH` 环境变量，确保系统能找到nvm安装的Node.js和npm。
+- 添加了 `NVM_DIR` 环境变量，指向nvm的安装目录。
+- 添加了 `Environment=NODE_ENV=production` 设置生产环境变量。
+
+**重要提示**: 
+- 请将路径中的 `/home/ubuntu` 替换为实际的用户主目录。
+- 请将 `v24.0.0` 替换为你实际安装的Node.js 24版本号。你可以通过运行 `nvm list` 命令查看已安装的版本。
+- 如果你的用户名不是 `ubuntu`，请相应地修改所有路径中的用户名。
 
 ### 启用并启动服务
 
