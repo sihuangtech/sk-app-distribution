@@ -100,26 +100,12 @@ router.get('/:filename', (req: Request, res: Response) => {
 
   console.log('Attempting to download file by original name:', originalFilename);
 
-  // 查找匹配原始文件名的文件（格式：timestamp_originalname）
-  try {
-    const files = fs.readdirSync(uploadsDir);
-    const matchingFile = files.find(file => file.endsWith(`_${originalFilename}`));
-    
-    if (!matchingFile) {
-      console.error('File not found:', originalFilename);
-      return res.status(404).send('文件未找到。');
-    }
+  // 直接查找原始文件名
+  const fullPath = path.join(uploadsDir, originalFilename);
+  
+  const speedLimitKbps = config.download?.speed_limit_kbps || 0;
 
-    const fullPath = path.join(uploadsDir, matchingFile);
-    
-    const speedLimitKbps = config.download?.speed_limit_kbps || 0;
-
-    streamFile(fullPath, res, originalFilename, speedLimitKbps);
-
-  } catch (error) {
-    console.error('Error reading uploads directory:', error);
-    return res.status(500).send('服务器错误。');
-  }
+  streamFile(fullPath, res, originalFilename, speedLimitKbps);
 });
 
   return router; // 返回配置好的路由

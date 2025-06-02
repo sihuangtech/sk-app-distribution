@@ -64,14 +64,37 @@ app.use('/api/version', verifyToken(config), versionRouter);
 // 下载路由（不需要认证，允许公开下载）
 app.use('/download', downloadRouter(config));
 
+// 在生产环境中，提供静态文件服务
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(process.cwd(), 'dist')));
+}
+
 // 处理根路径的文件下载请求（统一处理生产和开发环境）
 app.get('/:filename', (req: Request, res: Response, next) => {
   const filename = req.params.filename;
-  // 检查是否是文件下载请求（包含文件扩展名）
-  if (filename.includes('.')) {
-    // 转发到下载路由处理
-    req.url = `/download/${filename}`;
-    downloadRouter(config)(req, res, next);
+  
+  // 从配置文件读取允许的文件扩展名
+  const allowedExtensions = config.upload?.allowed_extensions || [];
+  
+  // 检查是否是文件下载请求（以配置的文件扩展名结尾）
+  const isFile = allowedExtensions.some((ext: string) => filename.toLowerCase().endsWith(ext.toLowerCase()));
+  
+  if (isFile) {
+    // 直接处理文件下载
+    const uploadsDir = path.join(process.cwd(), 'uploads');
+    const filePath = path.join(uploadsDir, filename);
+    
+    // 检查文件是否存在
+    if (fs.existsSync(filePath)) {
+      // 设置下载响应头
+      res.setHeader('Content-Type', 'application/octet-stream');
+      res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);
+      
+      // 发送文件
+      res.sendFile(filePath);
+    } else {
+      res.status(404).send('文件未找到');
+    }
   } else {
     // 不是文件请求，根据环境处理
     if (process.env.NODE_ENV === 'production') {
@@ -84,11 +107,8 @@ app.get('/:filename', (req: Request, res: Response, next) => {
   }
 });
 
-// 在生产环境中，提供静态文件服务
+// 在生产环境中，SPA路由处理（必须在文件下载路由之后）
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(process.cwd(), 'dist')));
-
-  // SPA路由处理（必须在文件下载路由之后）
   app.get('/*path', (req: Request, res: Response) => {
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
   });

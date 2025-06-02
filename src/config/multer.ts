@@ -31,13 +31,11 @@ const storage = multer.diskStorage({
     cb(null, uploadPath);
   },
   filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-    // 生成唯一文件名：时间戳 + 原始文件名
-    const timestamp = Date.now();
+    // 直接使用原始文件名，不添加时间戳
     const originalName = file.originalname;
-    const uniqueFilename = `${timestamp}_${originalName}`;
     
-    console.log('Generated filename:', uniqueFilename);
-    cb(null, uniqueFilename);
+    console.log('Using original filename:', originalName);
+    cb(null, originalName);
   }
 });
 
