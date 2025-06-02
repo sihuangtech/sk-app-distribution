@@ -15,6 +15,7 @@ import appsRouter from './src/routes/apps.ts';
 import settingsRouter from './src/routes/settings.ts';
 import versionRouter from './src/routes/version.ts';
 import { verifyToken } from './src/middleware/auth.ts';
+import { recordDownload } from './src/utils/downloadStats.ts';
 
 const app = express();
 
@@ -56,7 +57,7 @@ app.use('/api/auth', authRouter(config));
 
 // 需要认证的路由
 app.use('/upload', verifyToken(config), uploadRouter(config));
-app.use('/list', verifyToken(config), listRouter);
+app.use('/list', verifyToken(config), listRouter(config));
 app.use('/api/apps', verifyToken(config), appsRouter());
 app.use('/api/settings', verifyToken(config), settingsRouter(config));
 app.use('/api/version', verifyToken(config), versionRouter);
@@ -86,6 +87,9 @@ app.get('/:filename', (req: Request, res: Response, next) => {
     
     // 检查文件是否存在
     if (fs.existsSync(filePath)) {
+      // 记录下载次数
+      recordDownload(filename, req);
+      
       // 设置下载响应头
       res.setHeader('Content-Type', 'application/octet-stream');
       res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(filename)}"`);

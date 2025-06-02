@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
 import { Throttle } from 'stream-throttle'; // 导入 Throttle 类
+import { recordDownload } from '../utils/downloadStats.ts';
 
 // 修改为导出函数，接收 config 作为参数
 const downloadRouter = (config: any) => {
@@ -30,7 +31,7 @@ const findFile = (startDir: string, filename: string, callback: (err: Error | nu
 };
 
 // 处理文件下载的通用函数
-const streamFile = (fullPath: string, res: Response, originalFilename: string, speedLimitKbps: number) => {
+const streamFile = (fullPath: string, res: Response, originalFilename: string, speedLimitKbps: number, req?: Request) => {
   // 安全检查：确保文件路径在 uploads 目录内
   const uploadsDir = path.join(process.cwd(), 'uploads');
   if (!fullPath.startsWith(uploadsDir)) {
@@ -42,6 +43,11 @@ const streamFile = (fullPath: string, res: Response, originalFilename: string, s
     if (err) {
       console.error('File not found:', fullPath);
       return res.status(404).send('文件未找到。');
+    }
+
+    // 记录下载统计（如果提供了req对象）
+    if (req) {
+      recordDownload(originalFilename, req);
     }
 
     // 设置响应头
@@ -90,7 +96,7 @@ router.get('/:application/:os/:architecture/:versionType/:filename', (req: Reque
   
   const speedLimitKbps = config.download?.speed_limit_kbps || 0;
   
-  streamFile(fullPath, res, filename, speedLimitKbps);
+  streamFile(fullPath, res, filename, speedLimitKbps, req);
 });
 
 // 简化的文件下载路由 - 支持原始文件名查找
@@ -105,7 +111,7 @@ router.get('/:filename', (req: Request, res: Response) => {
   
   const speedLimitKbps = config.download?.speed_limit_kbps || 0;
 
-  streamFile(fullPath, res, originalFilename, speedLimitKbps);
+  streamFile(fullPath, res, originalFilename, speedLimitKbps, req);
 });
 
   return router; // 返回配置好的路由

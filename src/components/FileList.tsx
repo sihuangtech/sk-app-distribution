@@ -14,6 +14,7 @@ interface UploadedFile {
   architecture: string; // 架构
   versionType: string; // 版本类型
   size: number; // 文件大小（字节）
+  downloadCount: number; // 下载次数
 }
 
 interface FileListProps {
@@ -122,20 +123,8 @@ function FileList({ files, onFileDeleted }: FileListProps) {
 
   const handleCopyDownloadLink = async (filePath: string, fileName: string) => {
     try {
-      // 获取配置的域名
-      const apiBaseUrl = await getApiBaseUrl();
-      const configResponse = await fetch(`${apiBaseUrl}/api/config`);
-      let domain = window.location.origin; // 默认使用当前域名
-      
-      if (configResponse.ok) {
-        const config = await configResponse.json();
-        if (config.website?.domain) {
-          domain = config.website.domain;
-        }
-      }
-      
-      // 生成完整的下载链接
-      const downloadUrl = `${domain}${filePath}`;
+      // 直接使用后端返回的完整链接，不再进行拼接
+      const downloadUrl = filePath;
       
       // 复制到剪贴板
       await navigator.clipboard.writeText(downloadUrl);
@@ -332,6 +321,7 @@ function FileList({ files, onFileDeleted }: FileListProps) {
                     <span className="metadata-item">架构: {getArchLabel(file.architecture)}</span>
                     <span className="metadata-item">版本: {getVersionLabel(file.versionType)}</span>
                     <span className="metadata-item">大小: {formatFileSize(file.size)}</span>
+                    <span className="metadata-item">下载: {file.downloadCount} 次</span>
                   </div>
                 </div>
                 <div className="file-actions">

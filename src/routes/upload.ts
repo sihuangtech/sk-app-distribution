@@ -97,8 +97,18 @@ const uploadRouter = (config: any) => {
         });
       }
 
-      // 生成下载链接，直接使用原始文件名
-      const downloadUrl = `/${multerReq.file.originalname}`;
+      // 生成下载链接，根据环境区分
+      let downloadUrl: string;
+      
+      if (process.env.NODE_ENV === 'production') {
+        // 生产环境：使用配置文件中的域名
+        const domain = config.website?.domain;
+        downloadUrl = `${domain}/${multerReq.file.originalname}`;
+      } else {
+        // 开发环境：使用localhost和后端端口
+        const backendPort = config.server?.backend_port;
+        downloadUrl = `http://localhost:${backendPort}/${multerReq.file.originalname}`;
+      }
       
       // 保存文件元数据
       const newFileMetadata: FileMetadata = {
