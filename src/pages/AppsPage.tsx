@@ -6,6 +6,10 @@ interface UploadedFile {
   name: string;
   path: string;
   uploadTime: string;
+  application: string; // 应用名称
+  os: string; // 操作系统
+  architecture: string; // 架构
+  versionType: string; // 版本类型
 }
 
 interface AppsPageProps {

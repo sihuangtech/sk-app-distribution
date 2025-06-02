@@ -393,12 +393,13 @@ body {
   background-color: #dc3545;
   color: white;
   border: none;
-  border-radius: 4px;
   padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-left: 10px;
   white-space: nowrap;
 }
 
@@ -408,7 +409,28 @@ body {
 }
 
 .delete-button:active {
+  background-color: #bd2130;
   transform: translateY(0);
+}
+
+.copy-link-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+}
+
+.copy-link-button:hover {
+  background-color: #0056b3;
+}
+
+.copy-link-button:active {
+  background-color: #004085;
 }
 
 .empty-state {
@@ -555,4 +577,213 @@ body {
 /* 加载提示文本样式 */
 .loading-text {
   color: #6b7280;
+}
+
+/* 文件筛选器样式 */
+.file-filters {
+  margin-bottom: 30px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.filter-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-col label {
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #374151;
+  font-size: 14px;
+}
+
+.filter-col select {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.filter-col select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.filter-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clear-filters-button {
+  padding: 8px 16px !important;
+  background-color: #6c757d !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  font-size: 14px !important;
+  transition: background-color 0.2s ease !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+
+.clear-filters-button:hover {
+  background-color: #5a6268 !important;
+}
+
+.filter-count {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 文件信息和元数据样式 */
+.file-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file-metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.metadata-item {
+  color: #6c757d;
+  font-size: 12px;
+  background-color: #f8f9fa;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+/* 响应式筛选器布局 */
+@media (max-width: 768px) {
+  .filter-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .filter-actions {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+  
+  .file-metadata {
+    gap: 8px;
+  }
+  
+  .metadata-item {
+    font-size: 11px;
+    padding: 1px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .filter-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .file-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  
+  .file-actions {
+    justify-content: space-between;
+  }
+}
+
+/* 上传限制信息样式 */
+.upload-limits {
+  margin-top: 8px;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.limit-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.limit-info:last-child {
+  margin-bottom: 0;
+}
+
+.limit-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.limit-value {
+  color: #6c757d;
+  word-break: break-all;
+}
+
+/* 已选择文件信息样式 */
+.selected-file-info {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: #e7f3ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 4px;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #0056b3;
+  flex: 1;
+  margin-right: 12px;
+  word-break: break-all;
+}
+
+.file-size {
+  color: #495057;
+  white-space: nowrap;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .limit-info {
+    flex-direction: column;
+    gap: 2px;
+  }
+  
+  .selected-file-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .file-name {
+    margin-right: 0;
+  }
 } 

@@ -36,7 +36,7 @@ export const getConfig = async (): Promise<Config> => {
       return config;
     } catch (error) {
       configPromise = null; // 重置promise
-      console.error('获取配置失败:', error);
+      console.error('Failed to get config:', error);
       throw error;
     }
   })();

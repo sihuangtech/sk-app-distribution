@@ -12,6 +12,7 @@ import listRouter from './src/routes/list.ts';
 import authRouter from './src/routes/auth.ts';
 import configRouter from './src/routes/config.ts';
 import appsRouter from './src/routes/apps.ts';
+import settingsRouter from './src/routes/settings.ts';
 import { verifyToken } from './src/middleware/auth.ts';
 
 const app = express();
@@ -24,7 +25,7 @@ try {
   const configFile = fs.readFileSync(configPath, 'utf8');
   config = yaml.load(configFile);
 } catch (e) {
-  console.error('读取或解析配置文件失败:', e);
+  console.error('Failed to read or parse config file:', e);
   process.exit(1);
 }
 
@@ -53,20 +54,49 @@ app.use('/api/auth', authRouter(config));
 app.use('/upload', verifyToken(config), uploadRouter(config));
 app.use('/list', verifyToken(config), listRouter);
 app.use('/api/apps', verifyToken(config), appsRouter());
+app.use('/api/settings', verifyToken(config), settingsRouter(config));
 
 // 下载路由（不需要认证，允许公开下载）
-app.use('/download', downloadRouter);
+app.use('/download', downloadRouter(config));
 
 // 在生产环境中，提供静态文件服务
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(process.cwd(), 'dist')));
 
+  // 处理根路径的文件下载请求（生产环境）
+  app.get('/:filename', (req: Request, res: Response, next) => {
+    const filename = req.params.filename;
+    // 检查是否是文件下载请求（包含文件扩展名）
+    if (filename.includes('.')) {
+      // 转发到下载路由处理
+      req.url = `/download/${filename}`;
+      downloadRouter(config)(req, res, next);
+    } else {
+      // 不是文件请求，继续到下一个中间件（SPA路由）
+      next();
+    }
+  });
+
   app.get('*', (req: Request, res: Response) => {
     res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
+  });
+} else {
+  // 开发环境：处理根路径的文件下载请求
+  app.get('/:filename', (req: Request, res: Response, next) => {
+    const filename = req.params.filename;
+    // 检查是否是文件下载请求（包含文件扩展名）
+    if (filename.includes('.')) {
+      // 转发到下载路由处理
+      req.url = `/download/${filename}`;
+      downloadRouter(config)(req, res, next);
+    } else {
+      // 不是文件请求，返回404
+      res.status(404).send('Not found');
+    }
   });
 }
 
 // 启动服务器
 app.listen(port, () => {
-  console.log(`服务器运行在 http://localhost:${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 }); 

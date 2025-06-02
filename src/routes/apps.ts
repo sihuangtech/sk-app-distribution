@@ -31,7 +31,7 @@ const readApps = (): App[] => {
     }
     return [];
   } catch (error) {
-    console.error('读取应用列表失败:', error);
+    console.error('Failed to read apps list:', error);
     return [];
   }
 };
@@ -41,8 +41,7 @@ const saveApps = (apps: App[]): void => {
   try {
     fs.writeFileSync(appsDataPath, JSON.stringify(apps, null, 2));
   } catch (error) {
-    console.error('保存应用列表失败:', error);
-    throw error;
+    console.error('Failed to save apps list:', error);
   }
 };
 
@@ -58,7 +57,7 @@ export default function appsRouter() {
       const apps = readApps();
       res.json(apps);
     } catch (error) {
-      console.error('获取应用列表失败:', error);
+      console.error('Failed to get apps list:', error);
       res.status(500).json({ message: '获取应用列表失败' });
     }
   });
@@ -96,7 +95,7 @@ export default function appsRouter() {
         app: newApp 
       });
     } catch (error) {
-      console.error('创建应用失败:', error);
+      console.error('Failed to create app:', error);
       res.status(500).json({ message: '创建应用失败' });
     }
   });
@@ -139,7 +138,7 @@ export default function appsRouter() {
         app: apps[appIndex] 
       });
     } catch (error) {
-      console.error('更新应用失败:', error);
+      console.error('Failed to update app:', error);
       res.status(500).json({ message: '更新应用失败' });
     }
   });
@@ -160,7 +159,7 @@ export default function appsRouter() {
 
       res.json({ message: '应用删除成功' });
     } catch (error) {
-      console.error('删除应用失败:', error);
+      console.error('Failed to delete app:', error);
       res.status(500).json({ message: '删除应用失败' });
     }
   });

@@ -1,22 +1,32 @@
-# config.yaml
-
-# 软件分发平台配置文件
-
-# 服务器端口配置
 server:
-  backend_port: 4009  # 后端API端口
-  frontend_port: 3009 # 前端开发服务器端口
-
-# 管理员账号信息 (用于文件上传)
-# !!! 安全提示: 在生产环境中，请考虑使用更安全的秘密管理方式，如环境变量或秘密管理系统。
+  backend_port: 4009
+  frontend_port: 3009
+website:
+  domain: https://download.skstudio.cn
+  title: 彩旗软件分发平台
+  description: 为开发者提供便捷的应用包上传、管理和分发服务
+upload:
+  max_file_size: 5120
+  allowed_extensions:
+    - .exe
+    - .msi
+    - .dmg
+    - .pkg
+    - .deb
+    - .rpm
+    - .appimage
+    - .apk
+    - .ipa
+    - .hap
+    - .zip
+    - .tar.gz
+    - .7z
+  max_files_per_app: 10000
 admin:
-  username: admin # 请替换为你实际的管理员用户名
-  password: admin123 # 请替换为你实际的管理员密码
-  sessionDuration: 30 # 登录有效期（天数）
-
-# JWT 密钥配置
+  username: admin
+  password: SKstudio2025china
+  sessionDuration: 30
 jwt:
-  secret: 3f3b8c1e-5a2d-4c8e-9b1e-1f3c4e5d6a7b # 请替换为你的JWT密钥
-  
-# 可以在这里添加其他配置项，例如文件存储路径等 (如果需要的话)
-# fileStoragePath: ./uploads 
+  secret: 3f3b8c1e-5a2d-4c8e-9b1e-1f3c4e5d6a7b
+download:
+  speed_limit_kbps: 0

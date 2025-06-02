@@ -2,8 +2,11 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
+import { Throttle } from 'stream-throttle'; // 导入 Throttle 类
 
-const router = express.Router();
+// 修改为导出函数，接收 config 作为参数
+const downloadRouter = (config: any) => {
+  const router = express.Router();
 
 // 递归搜索文件（保留原有功能作为备用）
 const findFile = (startDir: string, filename: string, callback: (err: Error | null, filePath: string | null) => void) => {
@@ -26,6 +29,57 @@ const findFile = (startDir: string, filename: string, callback: (err: Error | nu
   });
 };
 
+// 处理文件下载的通用函数
+const streamFile = (fullPath: string, res: Response, originalFilename: string, speedLimitKbps: number) => {
+  // 安全检查：确保文件路径在 uploads 目录内
+  const uploadsDir = path.join(process.cwd(), 'uploads');
+  if (!fullPath.startsWith(uploadsDir)) {
+    return res.status(403).send('访问被拒绝。');
+  }
+
+  // 检查文件是否存在
+  fs.access(fullPath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error('File not found:', fullPath);
+      return res.status(404).send('文件未找到。');
+    }
+
+    // 设置响应头
+    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${encodeURIComponent(originalFilename)}"`);
+
+    const fileStream = fs.createReadStream(fullPath);
+
+    if (speedLimitKbps > 0) {
+      const speedLimitBps = speedLimitKbps * 1024 * 1024; // MB/s 转 Bytes/s
+      console.log(`Limiting download speed to ${speedLimitKbps} MB/s`);
+      const throttleStream = new Throttle({ rate: speedLimitBps });
+      fileStream.pipe(throttleStream).pipe(res);
+    } else {
+      console.log('No download speed limit applied.');
+      fileStream.pipe(res);
+    }
+
+    // 处理流的错误
+    fileStream.on('error', (streamErr) => {
+      console.error('File stream error:', streamErr);
+      if (!res.headersSent) {
+        res.status(500).send('文件读取失败。');
+      }
+    });
+
+    res.on('finish', () => {
+      console.log('File download finished.', fullPath);
+    });
+
+    res.on('error', (resErr) => {
+      console.error('Response stream error:', resErr);
+      // 如果响应流出错，尝试关闭文件流以释放资源
+      fileStream.destroy();
+    });
+  });
+};
+
 // 支持完整路径的文件下载：/download/app/os/arch/version/filename
 router.get('/:application/:os/:architecture/:versionType/:filename', (req: Request, res: Response) => {
   const { application, os, architecture, versionType, filename } = req.params;
@@ -34,62 +88,41 @@ router.get('/:application/:os/:architecture/:versionType/:filename', (req: Reque
   // 构建完整的文件路径
   const fullPath = path.join(uploadsDir, application, os, architecture, versionType, filename);
   
-  // 安全检查：确保文件路径在uploads目录内
-  if (!fullPath.startsWith(uploadsDir)) {
-    return res.status(403).send('访问被拒绝。');
-  }
+  const speedLimitKbps = config.download?.speed_limit_kbps || 0;
   
-  console.log('尝试下载文件:', fullPath);
-  
-  // 检查文件是否存在
-  fs.access(fullPath, fs.constants.F_OK, (err) => {
-    if (err) {
-      console.error('文件不存在:', fullPath);
-      return res.status(404).send('文件未找到。');
-    }
-    
-    // 文件存在，直接下载
-    res.download(fullPath, (downloadErr) => {
-      if (downloadErr) {
-        console.error('文件下载失败:', downloadErr);
-        if (!res.headersSent) {
-          res.status(500).send('文件下载失败。');
-        }
-      }
-    });
-  });
+  streamFile(fullPath, res, filename, speedLimitKbps);
 });
 
-// 简化的文件下载路由
+// 简化的文件下载路由 - 支持原始文件名查找
 router.get('/:filename', (req: Request, res: Response) => {
-  const filename = req.params.filename;
+  const originalFilename = req.params.filename;
   const uploadsDir = path.join(process.cwd(), 'uploads');
-  const fullPath = path.join(uploadsDir, filename);
 
-  // 安全检查：确保文件路径在uploads目录内
-  if (!fullPath.startsWith(uploadsDir)) {
-    return res.status(403).send('访问被拒绝。');
-  }
+  console.log('Attempting to download file by original name:', originalFilename);
 
-  console.log('尝试下载文件:', fullPath);
-
-  // 检查文件是否存在
-  fs.access(fullPath, fs.constants.F_OK, (err) => {
-    if (err) {
-      console.error('文件不存在:', fullPath);
+  // 查找匹配原始文件名的文件（格式：timestamp_originalname）
+  try {
+    const files = fs.readdirSync(uploadsDir);
+    const matchingFile = files.find(file => file.endsWith(`_${originalFilename}`));
+    
+    if (!matchingFile) {
+      console.error('File not found:', originalFilename);
       return res.status(404).send('文件未找到。');
     }
 
-    // 文件存在，直接下载
-    res.download(fullPath, (downloadErr) => {
-      if (downloadErr) {
-        console.error('文件下载失败:', downloadErr);
-        if (!res.headersSent) {
-          res.status(500).send('文件下载失败。');
-        }
-      }
-    });
-  });
+    const fullPath = path.join(uploadsDir, matchingFile);
+    
+    const speedLimitKbps = config.download?.speed_limit_kbps || 0;
+
+    streamFile(fullPath, res, originalFilename, speedLimitKbps);
+
+  } catch (error) {
+    console.error('Error reading uploads directory:', error);
+    return res.status(500).send('服务器错误。');
+  }
 });
 
-export default router; 
+  return router; // 返回配置好的路由
+};
+
+export default downloadRouter; // 导出函数 

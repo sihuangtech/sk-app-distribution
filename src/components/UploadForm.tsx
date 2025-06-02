@@ -22,13 +22,17 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [downloadLink, setDownloadLink] = useState<string>('');
   const [application, setApplication] = useState<string>('');
-  const [os, setOs] = useState<string>('');
-  const [architecture, setArchitecture] = useState<string>('');
+  const [os, setOs] = useState<string>('windows');
+  const [architecture, setArchitecture] = useState<string>('x64');
   const [versionType, setVersionType] = useState<string>('release');
   const [uploading, setUploading] = useState<boolean>(false);
   const [apps, setApps] = useState<App[]>([]);
   const [loadingApps, setLoadingApps] = useState<boolean>(true);
   const [showCreateModal, setShowCreateModal] = useState<boolean>(false);
+  const [uploadConfig, setUploadConfig] = useState<{
+    max_file_size: number;
+    allowed_extensions: string[];
+  } | null>(null);
   const [toast, setToast] = useState<{
     message: string;
     type: 'success' | 'error' | 'info';
@@ -53,22 +57,50 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
 
   // 定义所有可能的操作系统和对应的架构
   const availableArchitectures: { [key: string]: { value: string, label: string }[] } = {
-    windows: [{ value: 'x64', label: 'x64' }, { value: 'arm64', label: 'arm64' }],
-    macos: [{ value: 'x64', label: 'x64 (Intel Chip)' }, { value: 'arm64', label: 'arm64 (Apple Silicon)' }, { value: 'universal', label: 'Universal' }],
-    linux: [{ value: 'x64', label: 'x64' }, { value: 'arm64', label: 'arm64' }],
+    windows: [
+      { value: 'x64', label: 'x64 (64位)' }, 
+      { value: 'x86', label: 'x86 (32位)' }, 
+      { value: 'arm64', label: 'arm64' }
+    ],
+    macos: [
+      { value: 'arm64', label: 'arm64 (Apple Silicon)' }, 
+      { value: 'x64', label: 'x64 (Intel Chip)' }, 
+      { value: 'universal', label: 'Universal' }
+    ],
+    linux: [
+      { value: 'x64', label: 'x64 (64位)' }, 
+      { value: 'x86', label: 'x86 (32位)' }, 
+      { value: 'arm64', label: 'arm64' }
+    ],
     android: [{ value: 'arm64', label: 'arm64' }],
     ios: [{ value: 'arm64', label: 'arm64' }],
     harmonyos: [{ value: 'arm64', label: 'arm64' }],
     '': [{ value: 'x64', label: 'x64' }, { value: 'arm64', label: 'arm64' }],
   };
 
+  // 定义每个操作系统的默认架构
+  const defaultArchitectures: { [key: string]: string } = {
+    windows: 'x64',
+    macos: 'arm64',
+    linux: 'x64',
+    android: 'arm64',
+    ios: 'arm64',
+    harmonyos: 'arm64'
+  };
+
   // 根据选择的操作系统计算可用的架构选项
   const filteredArchitectures = useMemo(() => {
-    if (os && availableArchitectures[os] && !availableArchitectures[os].some(arch => arch.value === architecture)) {
-        setArchitecture('');
-    }
     return availableArchitectures[os] || availableArchitectures[''];
-  }, [os, architecture]);
+  }, [os]);
+
+  // 当操作系统改变时，自动设置默认架构
+  useEffect(() => {
+    if (os && defaultArchitectures[os]) {
+      setArchitecture(defaultArchitectures[os]);
+    } else if (os && availableArchitectures[os] && availableArchitectures[os].length > 0) {
+      setArchitecture(availableArchitectures[os][0].value);
+    }
+  }, [os]);
 
   // 获取应用列表
   const fetchApps = async () => {
@@ -96,9 +128,27 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
     }
   };
 
-  // 组件加载时获取应用列表
+  // 获取上传配置
+  const fetchUploadConfig = async () => {
+    try {
+      const apiBaseUrl = await getApiBaseUrl();
+      const response = await fetch(`${apiBaseUrl}/api/config`);
+      
+      if (response.ok) {
+        const config = await response.json();
+        if (config.upload) {
+          setUploadConfig(config.upload);
+        }
+      }
+    } catch (error) {
+      console.error('获取上传配置失败:', error);
+    }
+  };
+
+  // 组件加载时获取应用列表和上传配置
   useEffect(() => {
     fetchApps();
+    fetchUploadConfig();
   }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,8 +199,8 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
         // 重置表单
         setSelectedFile(null);
         setApplication('');
-        setOs('');
-        setArchitecture('');
+        setOs('windows');
+        setArchitecture('x64');
         setVersionType('release');
         
         // 重置文件输入
@@ -226,7 +276,6 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
           <div className="form-col">
             <label htmlFor="os">操作系统:</label>
             <select id="os" value={os} onChange={(e) => setOs(e.target.value)} disabled={uploading}>
-              <option value="">请选择</option>
               <option value="windows">Windows</option>
               <option value="macos">macOS</option>
               <option value="linux">Linux</option>
@@ -239,7 +288,6 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
           <div className="form-col">
             <label htmlFor="architecture">架构:</label>
             <select id="architecture" value={architecture} onChange={(e) => setArchitecture(e.target.value)} disabled={uploading}>
-              <option value="">请选择</option>
               {filteredArchitectures.map((arch) => (
                 <option key={arch.value} value={arch.value}>{arch.label}</option>
               ))}
@@ -283,6 +331,24 @@ function UploadForm({ onUploadSuccess, onAppCreated }: UploadFormProps) {
             onChange={handleFileChange} 
             disabled={uploading} 
           />
+          {uploadConfig && (
+            <div className="upload-limits">
+              <div className="limit-info">
+                <span className="limit-label">文件大小限制:</span>
+                <span className="limit-value">最大 {uploadConfig.max_file_size} MB (约 {(uploadConfig.max_file_size / 1024).toFixed(1)} GB)</span>
+              </div>
+              <div className="limit-info">
+                <span className="limit-label">支持格式:</span>
+                <span className="limit-value">{uploadConfig.allowed_extensions.join(', ')}</span>
+              </div>
+            </div>
+          )}
+          {selectedFile && (
+            <div className="selected-file-info">
+              <span className="file-name">已选择: {selectedFile.name}</span>
+              <span className="file-size">大小: {(selectedFile.size / 1024 / 1024).toFixed(2)} MB</span>
+            </div>
+          )}
         </div>
         
         <button onClick={handleUpload} disabled={uploading || !selectedFile}>

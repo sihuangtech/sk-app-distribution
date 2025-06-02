@@ -16,8 +16,8 @@ try {
     throw new Error('配置文件中缺少必要的端口配置');
   }
 } catch (e) {
-  console.error('读取配置文件失败:', e);
-  console.error('请确保config.yaml文件存在且包含正确的端口配置');
+  console.error('Failed to read config file:', e);
+  console.error('Please ensure config.yaml exists and contains correct port configuration');
   process.exit(1);
 }
 
@@ -42,6 +42,11 @@ export default defineConfig({
         changeOrigin: true,
       },
       '/list': {
+        target: `http://localhost:${config.server.backend_port}`,
+        changeOrigin: true,
+      },
+      // 代理根路径的文件下载请求（包含文件扩展名的请求）
+      '^/[^/]*\\.[^/]+$': {
         target: `http://localhost:${config.server.backend_port}`,
         changeOrigin: true,
       }
