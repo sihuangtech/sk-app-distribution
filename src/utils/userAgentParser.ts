@@ -62,9 +62,124 @@ export const parseBrowserInfo = (userAgent: string): BrowserInfo => {
     }
   }
   
+  // 首先检查是否为爬虫或自动化工具
+  if (userAgent.includes('Baiduspider')) {
+    browser = '百度爬虫';
+    const baiduMatch = userAgent.match(/Baiduspider\/([\d.]+)/);
+    if (baiduMatch) browserVersion = baiduMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('Googlebot')) {
+    browser = 'Google爬虫';
+    const googleMatch = userAgent.match(/Googlebot\/([\d.]+)/);
+    if (googleMatch) browserVersion = googleMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('bingbot') || userAgent.includes('BingBot')) {
+    browser = 'Bing爬虫';
+    const bingMatch = userAgent.match(/bingbot\/([\d.]+)/i);
+    if (bingMatch) browserVersion = bingMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('Slurp')) {
+    browser = '雅虎爬虫';
+    const yahooMatch = userAgent.match(/Slurp\/([\d.]+)/);
+    if (yahooMatch) browserVersion = yahooMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('Sogou')) {
+    browser = '搜狗爬虫';
+    const sogouMatch = userAgent.match(/Sogou[^\/]*\/([\d.]+)/);
+    if (sogouMatch) browserVersion = sogouMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('360Spider')) {
+    browser = '360爬虫';
+    const spider360Match = userAgent.match(/360Spider[^\/]*\/([\d.]+)/);
+    if (spider360Match) browserVersion = spider360Match[1];
+    os = '爬虫';
+  } else if (userAgent.includes('YisouSpider')) {
+    browser = '神马爬虫';
+    const yisouMatch = userAgent.match(/YisouSpider\/([\d.]+)/);
+    if (yisouMatch) browserVersion = yisouMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('facebookexternalhit')) {
+    browser = 'Facebook爬虫';
+    const fbMatch = userAgent.match(/facebookexternalhit\/([\d.]+)/);
+    if (fbMatch) browserVersion = fbMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('Twitterbot')) {
+    browser = 'Twitter爬虫';
+    const twitterMatch = userAgent.match(/Twitterbot\/([\d.]+)/);
+    if (twitterMatch) browserVersion = twitterMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('LinkedInBot')) {
+    browser = 'LinkedIn爬虫';
+    const linkedinMatch = userAgent.match(/LinkedInBot\/([\d.]+)/);
+    if (linkedinMatch) browserVersion = linkedinMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('ClaudeBot')) {
+    browser = 'Claude爬虫';
+    const claudeMatch = userAgent.match(/ClaudeBot\/([\d.]+)/);
+    if (claudeMatch) browserVersion = claudeMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('GPTBot')) {
+    browser = 'GPT爬虫';
+    const gptMatch = userAgent.match(/GPTBot\/([\d.]+)/);
+    if (gptMatch) browserVersion = gptMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('ChatGPT-User')) {
+    browser = 'ChatGPT用户代理';
+    os = '爬虫';
+  } else if (userAgent.includes('CCBot')) {
+    browser = 'CommonCrawl爬虫';
+    const ccMatch = userAgent.match(/CCBot\/([\d.]+)/);
+    if (ccMatch) browserVersion = ccMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('DuckDuckBot')) {
+    browser = 'DuckDuckGo爬虫';
+    const duckMatch = userAgent.match(/DuckDuckBot\/([\d.]+)/);
+    if (duckMatch) browserVersion = duckMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('YandexBot')) {
+    browser = 'Yandex爬虫';
+    const yandexMatch = userAgent.match(/YandexBot\/([\d.]+)/);
+    if (yandexMatch) browserVersion = yandexMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('AppleBot')) {
+    browser = 'Apple爬虫';
+    const appleMatch = userAgent.match(/AppleBot\/([\d.]+)/);
+    if (appleMatch) browserVersion = appleMatch[1];
+    os = '爬虫';
+  } else if (userAgent.includes('WP-URLDetails')) {
+    browser = 'WordPress链接检测';
+    const wpMatch = userAgent.match(/WP-URLDetails\/([\d.]+)/);
+    if (wpMatch) browserVersion = wpMatch[1];
+    os = '自动化工具';
+  } else if (userAgent.includes('curl/')) {
+    browser = 'cURL';
+    const curlMatch = userAgent.match(/curl\/([\d.]+)/);
+    if (curlMatch) browserVersion = curlMatch[1];
+    os = '命令行工具';
+  } else if (userAgent.includes('wget/')) {
+    browser = 'Wget';
+    const wgetMatch = userAgent.match(/wget\/([\d.]+)/);
+    if (wgetMatch) browserVersion = wgetMatch[1];
+    os = '命令行工具';
+  } else if (userAgent.includes('Postman')) {
+    browser = 'Postman';
+    const postmanMatch = userAgent.match(/Postman\/([\d.]+)/);
+    if (postmanMatch) browserVersion = postmanMatch[1];
+    os = 'API测试工具';
+  } else if (userAgent.includes('spider') || userAgent.includes('crawler') || userAgent.includes('bot')) {
+    // 通用爬虫检测
+    if (userAgent.includes('spider')) {
+      browser = '网络爬虫';
+    } else if (userAgent.includes('crawler')) {
+      browser = '网络爬虫';
+    } else {
+      browser = '机器人';
+    }
+    os = '爬虫';
+  }
   // 解析浏览器信息
   // Edge 需要先判断，因为Edge也包含Chrome字符串
-  if (userAgent.includes('Edg/')) {
+  else if (userAgent.includes('Edg/')) {
     browser = 'Edge';
     const edgeMatch = userAgent.match(/Edg\/([\d.]+)/);
     if (edgeMatch) browserVersion = edgeMatch[1];
@@ -106,18 +221,6 @@ export const parseBrowserInfo = (userAgent: string): BrowserInfo => {
     browser = 'Internet Explorer';
     const ieMatch = userAgent.match(/rv:([\d.]+)/);
     if (ieMatch) browserVersion = ieMatch[1];
-  } else if (userAgent.includes('curl/')) {
-    browser = 'cURL';
-    const curlMatch = userAgent.match(/curl\/([\d.]+)/);
-    if (curlMatch) browserVersion = curlMatch[1];
-  } else if (userAgent.includes('wget/')) {
-    browser = 'Wget';
-    const wgetMatch = userAgent.match(/wget\/([\d.]+)/);
-    if (wgetMatch) browserVersion = wgetMatch[1];
-  } else if (userAgent.includes('Postman')) {
-    browser = 'Postman';
-    const postmanMatch = userAgent.match(/Postman\/([\d.]+)/);
-    if (postmanMatch) browserVersion = postmanMatch[1];
   }
   
   // 移动端特殊处理

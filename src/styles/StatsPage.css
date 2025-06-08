@@ -502,39 +502,81 @@
   font-style: italic;
 }
 
+/* 爬虫和自动化工具样式 */
+.bot-browser {
+  color: #e74c3c !important;
+  font-weight: 600 !important;
+}
+
+.bot-os {
+  color: #e74c3c !important;
+  font-weight: 500 !important;
+}
+
 /* 分页 */
 .pagination {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 15px;
   margin-top: 20px;
   padding: 20px 0;
+  gap: 15px;
 }
 
-.pagination button {
+.pagination-info {
+  color: #666;
+  font-size: 0.9rem;
+  flex: 1;
+}
+
+.pagination-buttons {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.page-size-selector label {
+  font-size: 0.9rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.page-size-selector select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+}
+
+.pagination-btn {
   background: #007bff;
   color: white;
   border: none;
-  padding: 8px 16px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 0.9rem;
   transition: background-color 0.3s ease;
+  white-space: nowrap;
+  min-width: auto;
+  width: auto;
 }
 
-.pagination button:hover:not(:disabled) {
+.pagination-btn:hover:not(:disabled) {
   background: #0056b3;
 }
 
-.pagination button:disabled {
+.pagination-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
-}
-
-.pagination span {
-  color: #666;
-  font-size: 0.9rem;
 }
 
 /* 响应式设计 */
@@ -634,6 +676,22 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0.75rem;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+  }
+  
+  .pagination-info {
+    text-align: center;
+    order: 2;
+  }
+  
+  .pagination-buttons {
+    justify-content: center;
+    order: 1;
   }
 }
 

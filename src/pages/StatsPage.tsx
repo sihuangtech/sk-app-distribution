@@ -57,7 +57,7 @@ const StatsPage: React.FC = () => {
   const [history, setHistory] = useState<DownloadHistory[]>([]);
   const [historyPagination, setHistoryPagination] = useState({
     page: 1,
-    limit: 20,
+    limit: 50,
     total: 0,
     totalPages: 0
   });
@@ -145,15 +145,16 @@ const StatsPage: React.FC = () => {
   };
 
   // 获取下载历史
-  const fetchHistory = async (page: number = 1, filters?: typeof historyFilters) => {
+  const fetchHistory = async (page: number = 1, filters?: typeof historyFilters, customLimit?: number) => {
     try {
       const token = localStorage.getItem('token');
       const apiBaseUrl = await getApiBaseUrl();
       
       const currentFilters = filters || historyFilters;
+      const currentLimit = customLimit || historyPagination.limit;
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: historyPagination.limit.toString()
+        limit: currentLimit.toString()
       });
       
       // 构建fileType参数：如果选择了具体的应用、操作系统、架构，则组合成fileType
@@ -212,8 +213,8 @@ const StatsPage: React.FC = () => {
         setHistoryPagination({
           page: data.page,
           limit: data.limit,
-          total: filteredHistory.length,
-          totalPages: Math.ceil(filteredHistory.length / data.limit)
+          total: data.total,
+          totalPages: data.totalPages
         });
         setAvailableFileTypes(data.availableFileTypes);
         if (filters) {
@@ -560,6 +561,8 @@ const StatsPage: React.FC = () => {
                 </div>
               </div>
               
+
+              
               <div className="date-range-group">
                 <div className="filter-group-inline">
                   <label htmlFor="startDateFilter">开始日期:</label>
@@ -655,7 +658,7 @@ const StatsPage: React.FC = () => {
           </div>
           
           <div className="filter-summary">
-            共找到 {historyPagination.total} 条记录
+            共找到 {historyPagination.total} 条记录，当前显示第 {historyPagination.page} 页（共 {historyPagination.totalPages} 页）
             {(historyFilters.fileType !== 'all' || historyFilters.startDate || historyFilters.endDate) && (
               <span className="active-filters">
                 {historyFilters.fileType !== 'all' && ` | 文件类型: ${formatFileType(historyFilters.fileType)}`}
@@ -702,10 +705,10 @@ const StatsPage: React.FC = () => {
                       </td>
                       <td className="browser-info">
                         <div className="browser-details">
-                          <div className="browser-main">
+                          <div className={`browser-main ${browserInfo.os === '爬虫' || browserInfo.os === '自动化工具' || browserInfo.os === '命令行工具' || browserInfo.os === 'API测试工具' ? 'bot-browser' : ''}`}>
                             {browserInfo.browser}
                           </div>
-                          <div className="browser-os">
+                          <div className={`browser-os ${browserInfo.os === '爬虫' || browserInfo.os === '自动化工具' || browserInfo.os === '命令行工具' || browserInfo.os === 'API测试工具' ? 'bot-os' : ''}`}>
                             {browserInfo.os}
                           </div>
                         </div>
@@ -718,23 +721,46 @@ const StatsPage: React.FC = () => {
           </div>
 
           {/* 分页 */}
-          {historyPagination.totalPages > 1 && (
+          {historyPagination.total > 0 && (
             <div className="pagination">
-              <button 
-                onClick={() => fetchHistory(historyPagination.page - 1)}
-                disabled={historyPagination.page <= 1}
-              >
-                上一页
-              </button>
-              <span>
+              <span className="pagination-info">
                 第 {historyPagination.page} 页，共 {historyPagination.totalPages} 页
+                （每页 {historyPagination.limit} 条，共 {historyPagination.total} 条记录）
               </span>
-              <button 
-                onClick={() => fetchHistory(historyPagination.page + 1)}
-                disabled={historyPagination.page >= historyPagination.totalPages}
-              >
-                下一页
-              </button>
+              <div className="pagination-buttons">
+                <div className="page-size-selector">
+                  <label htmlFor="pageSizeSelect">每页显示:</label>
+                  <select 
+                    id="pageSizeSelect"
+                    value={historyPagination.limit}
+                    onChange={(e) => {
+                      const newLimit = parseInt(e.target.value);
+                      setHistoryPagination(prev => ({...prev, limit: newLimit, page: 1}));
+                      fetchHistory(1, undefined, newLimit);
+                    }}
+                    title="选择每页显示的记录数量"
+                  >
+                    <option value={20}>20条</option>
+                    <option value={50}>50条</option>
+                    <option value={100}>100条</option>
+                    <option value={200}>200条</option>
+                  </select>
+                </div>
+                <button 
+                  className="pagination-btn"
+                  onClick={() => fetchHistory(historyPagination.page - 1)}
+                  disabled={historyPagination.page <= 1}
+                >
+                  上一页
+                </button>
+                <button 
+                  className="pagination-btn"
+                  onClick={() => fetchHistory(historyPagination.page + 1)}
+                  disabled={historyPagination.page >= historyPagination.totalPages}
+                >
+                  下一页
+                </button>
+              </div>
             </div>
           )}
         </div>

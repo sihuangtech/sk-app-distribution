@@ -177,9 +177,9 @@ export const recordDownload = async (filename: string, req: Request): Promise<vo
     location
   });
   
-  // 保留最近1000次历史记录（用于分析，不影响统计计数）
-  if (history.length > 1000) {
-    const trimmedHistory = history.slice(-1000);
+  // 保留最近5000次历史记录（用于分析，不影响统计计数）
+  if (history.length > 5000) {
+    const trimmedHistory = history.slice(-5000);
     saveDownloadHistory(trimmedHistory);
   } else {
     saveDownloadHistory(history);
