@@ -92,7 +92,7 @@ app.get('/:filename', (req: Request, res: Response, next) => {
     
     // 检查文件是否存在
     if (fs.existsSync(filePath)) {
-      // 记录下载次数
+      // 记录下载次数（这是主要的下载入口）
       recordDownload(filename, req).catch(error => {
         console.error('Failed to record download:', error);
       });
