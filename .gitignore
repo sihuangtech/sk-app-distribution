@@ -45,3 +45,6 @@ coverage/
 
 # Newly added data/
 data/
+
+# Configuration file
+config.yaml

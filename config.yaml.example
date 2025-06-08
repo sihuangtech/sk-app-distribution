@@ -1,10 +1,10 @@
 server:
   backend_port: 4009
   frontend_port: 3009
-  frontend_url: https://download.skstudio.cn
-  backend_url: https://download.skstudio.cn
+  frontend_url: https://your-domain.com
+  backend_url: https://your-domain.com
 website:
-  domain: https://download.skstudio.cn
+  domain: https://your-domain.com
   title: 彩旗软件分发平台
   description: 为开发者提供便捷的应用包上传、管理和分发服务
 upload:
@@ -25,15 +25,15 @@ upload:
     - .7z
   max_files_per_app: 10000
 admin:
-  username: admin
-  password: SKstudio2025china
+  username: your_admin_username
+  password: your_admin_password
   sessionDuration: 30
 jwt:
-  secret: 3f3b8c1e-5a2d-4c8e-9b1e-1f3c4e5d6a7b
+  secret: your_jwt_secret_key_here
 download:
   speed_limit_kbps: 0
 geolocation:
   enabled: true
   api_provider: ipapi
   api_key: ''
-  cache_duration: 86400
+  cache_duration: 86400 
