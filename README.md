@@ -71,24 +71,26 @@ npm install
 
 ## 配置设置
 
-在运行项目前，请先配置 `config.yaml` 文件。所有系统配置都在此文件中统一管理：
+在运行项目前，请先从 `config.yaml.example` 文件复制一份到 `config.yaml`，然后配置 `config.yaml` 文件。所有系统配置都在此文件中统一管理：
 
 ```yaml
 # 服务器端口配置
 server:
-  backend_port: 4009  # 后端API端口
-  frontend_port: 3009 # 前端开发服务器端口
+  backend_port: 4009
+  frontend_port: 3009
+  frontend_url: https://your-domain.com  # 前端访问URL，用于生成下载链接等
+  backend_url: https://your-domain.com  # 后端API访问URL，用于前端API请求
 
 # 网站信息配置
 website:
-  domain: https://download.skstudio.cn # 网站域名，用于生成完整的下载链接
+  domain: https://your-domain.com # 网站域名，用于生成完整的下载链接
   title: 彩旗软件分发平台 # 网站标题
   description: 为开发者提供便捷的应用包上传、管理和分发服务 # 网站描述
 
 # 文件上传限制配置
 upload:
   max_file_size: 5120 # 最大文件大小，单位：MB
-  allowed_extensions: # 允许上传的文件扩展名列表
+  allowed_extensions:
     - .exe
     - .msi
     - .dmg
@@ -106,7 +108,7 @@ upload:
 
 # 文件下载配置
 download:
-  speed_limit_kbps: 0 # 下载速度限制，单位：MB/s，0表示不限制
+  speed_limit_kbps: 0 # 下载速度限制，单位：KB/s，0表示不限制
 
 # 管理员账号配置
 admin:
@@ -117,6 +119,13 @@ admin:
 # JWT认证配置
 jwt:
   secret: your_jwt_secret_key_here # 请替换为你的JWT密钥，务必修改为一个复杂且安全的字符串！
+
+# 地理信息配置
+geolocation:
+  enabled: true # 是否启用IP地理信息查询功能
+  api_provider: ipapi # 地理信息API提供商：ipapi, ipstack, ipgeolocation, ip2location
+  api_key: '' # API密钥 (ipapi免费，无需密钥，其他需要)
+  cache_duration: 86400 # 地理信息缓存时长，单位：秒 (默认24小时，即86400秒)
 ```
 
 **⚠️ 重要：在运行项目前，必须先配置 `config.yaml` 文件。所有关键配置（包括端口、管理员账号、JWT密钥）都在此文件中统一管理。**
