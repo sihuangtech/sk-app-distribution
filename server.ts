@@ -14,6 +14,7 @@ import configRouter from './src/routes/config.ts';
 import appsRouter from './src/routes/apps.ts';
 import settingsRouter from './src/routes/settings.ts';
 import versionRouter from './src/routes/version.ts';
+import statsRouter from './src/routes/stats.ts';
 import { verifyToken } from './src/middleware/auth.ts';
 import { recordDownload } from './src/utils/downloadStats.ts';
 
@@ -33,6 +34,9 @@ try {
 
 // 从配置文件获取端口
 const port = config.server.backend_port;
+
+// 信任代理，允许获取真实客户端IP
+app.set('trust proxy', true);
 
 // 允许跨域请求
 app.use(cors());
@@ -57,10 +61,11 @@ app.use('/api/auth', authRouter(config));
 
 // 需要认证的路由
 app.use('/upload', verifyToken(config), uploadRouter(config));
-app.use('/list', verifyToken(config), listRouter(config));
+app.use('/api/list', verifyToken(config), listRouter(config));
 app.use('/api/apps', verifyToken(config), appsRouter());
 app.use('/api/settings', verifyToken(config), settingsRouter(config));
 app.use('/api/version', verifyToken(config), versionRouter);
+app.use('/api/stats', verifyToken(config), statsRouter());
 
 // 下载路由（不需要认证，允许公开下载）
 app.use('/download', downloadRouter(config));
@@ -88,7 +93,9 @@ app.get('/:filename', (req: Request, res: Response, next) => {
     // 检查文件是否存在
     if (fs.existsSync(filePath)) {
       // 记录下载次数
-      recordDownload(filename, req);
+      recordDownload(filename, req).catch(error => {
+        console.error('Failed to record download:', error);
+      });
       
       // 设置下载响应头
       res.setHeader('Content-Type', 'application/octet-stream');

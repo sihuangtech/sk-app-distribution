@@ -149,7 +149,7 @@ function FileList({ files, onFileDeleted }: FileListProps) {
       const token = localStorage.getItem('token');
       const apiBaseUrl = await getApiBaseUrl();
       
-      const response = await fetch(`${apiBaseUrl}/list/delete`, {
+      const response = await fetch(`${apiBaseUrl}/api/list/delete`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -195,7 +195,8 @@ function FileList({ files, onFileDeleted }: FileListProps) {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
+      hour12: false
     });
   };
 

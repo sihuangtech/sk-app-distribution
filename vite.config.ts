@@ -41,10 +41,6 @@ export default defineConfig({
         target: `http://localhost:${config.server.backend_port}`,
         changeOrigin: true,
       },
-      '/list': {
-        target: `http://localhost:${config.server.backend_port}`,
-        changeOrigin: true,
-      },
       // 代理根路径的文件下载请求（包含文件扩展名的请求）
       '^/[^/]*\\.[^/]+$': {
         target: `http://localhost:${config.server.backend_port}`,

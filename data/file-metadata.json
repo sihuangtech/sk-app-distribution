@@ -1,12 +1,12 @@
 [
   {
-    "originalName": "Multi-site Monitor-1.0.0-win-x64.exe",
-    "filename": "Multi-site Monitor-1.0.0-win-x64.exe",
-    "application": "MultiSiteTool",
+    "originalName": "geek.exe",
+    "filename": "geek.exe",
+    "application": "demo-app",
     "os": "windows",
     "architecture": "x64",
     "versionType": "release",
-    "uploadTime": "2025-06-02T06:27:19.238Z",
-    "downloadUrl": "/Multi-site Monitor-1.0.0-win-x64.exe"
+    "uploadTime": "2025-06-08T05:58:43.354Z",
+    "downloadUrl": "http://localhost:4009/geek.exe"
   }
 ]

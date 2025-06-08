@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import UploadPage from './pages/UploadPage';
 import AppsPage from './pages/AppsPage';
+import StatsPage from './pages/StatsPage';
 import SettingsPage from './pages/SettingsPage';
 import UploadForm from './components/UploadForm'; // 导入 UploadForm 组件
 import FileList from './components/FileList';     // 导入 FileList 组件
@@ -59,7 +60,7 @@ function App() {
     try {
       const token = localStorage.getItem('token');
       const apiBaseUrl = await getApiBaseUrl();
-      const response = await fetch(`${apiBaseUrl}/list`, {
+      const response = await fetch(`${apiBaseUrl}/api/list`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -148,6 +149,7 @@ function App() {
           <Routes>
             <Route path="/upload" element={<UploadPage onUploadSuccess={handleUploadSuccess} />} />
             <Route path="/apps" element={<AppsPage files={uploadedFiles} fileStats={fileStats} onFileDeleted={fetchFiles} />} />
+            <Route path="/stats" element={<StatsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/" element={<Navigate to="/upload" replace />} />
           </Routes>

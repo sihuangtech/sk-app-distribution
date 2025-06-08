@@ -1,8 +1,14 @@
 [
   {
     "filename": "Multi-site Monitor-1.0.0-win-x64.exe",
-    "downloadCount": 1,
-    "lastDownload": "2025-06-02T06:48:17.122Z",
+    "downloadCount": 2,
+    "lastDownload": "2025-06-02T06:59:55.966Z",
     "firstDownload": "2025-06-02T06:48:17.122Z"
+  },
+  {
+    "filename": "geek.exe",
+    "downloadCount": 1,
+    "lastDownload": "2025-06-08T05:58:49.936Z",
+    "firstDownload": "2025-06-08T05:58:49.936Z"
   }
 ]

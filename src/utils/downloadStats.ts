@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import type { Request } from 'express';
+import { getLocationInfo } from './geolocation.ts';
+import yaml from 'js-yaml';
 
 // 下载统计数据结构
 export interface DownloadRecord {
@@ -16,6 +18,15 @@ export interface DownloadHistory {
   timestamp: string;
   ip: string;
   userAgent: string;
+  location?: {
+    country?: string;
+    region?: string;
+    city?: string;
+    countryCode?: string;
+    regionCode?: string;
+    timezone?: string;
+    isp?: string;
+  };
 }
 
 const downloadStatsPath = path.join(process.cwd(), 'data', 'download-stats.json');
@@ -77,10 +88,51 @@ export const saveDownloadHistory = (history: DownloadHistory[]): void => {
   }
 };
 
+// 获取真实客户端IP地址（支持代理）
+const getRealClientIP = (req: Request): string => {
+  // 按优先级检查各种可能包含真实IP的请求头
+  const forwarded = req.get('X-Forwarded-For');
+  if (forwarded) {
+    // X-Forwarded-For 可能包含多个IP，第一个是客户端真实IP
+    const ips = forwarded.split(',').map(ip => ip.trim());
+    return ips[0];
+  }
+  
+  const realIP = req.get('X-Real-IP');
+  if (realIP) {
+    return realIP;
+  }
+  
+  const clientIP = req.get('X-Client-IP');
+  if (clientIP) {
+    return clientIP;
+  }
+  
+  const forwardedFor = req.get('X-Forwarded');
+  if (forwardedFor) {
+    return forwardedFor;
+  }
+  
+  // 如果都没有，回退到默认方式
+  return req.ip || req.connection.remoteAddress || 'unknown';
+};
+
+// 读取配置文件
+const readConfig = () => {
+  try {
+    const configPath = path.join(process.cwd(), 'config.yaml');
+    const configFile = fs.readFileSync(configPath, 'utf8');
+    return yaml.load(configFile) as any;
+  } catch (error) {
+    console.error('Failed to read config file:', error);
+    return null;
+  }
+};
+
 // 记录下载
-export const recordDownload = (filename: string, req: Request): void => {
+export const recordDownload = async (filename: string, req: Request): Promise<void> => {
   const now = new Date().toISOString();
-  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const ip = getRealClientIP(req);
   const userAgent = req.get('User-Agent') || 'unknown';
   
   // 更新统计数据
@@ -104,13 +156,25 @@ export const recordDownload = (filename: string, req: Request): void => {
   
   saveDownloadStats(stats);
   
+  // 查询地理信息
+  const config = readConfig();
+  let location = null;
+  if (config?.geolocation) {
+    try {
+      location = await getLocationInfo(ip, config.geolocation);
+    } catch (error) {
+      console.error('Failed to get location info:', error);
+    }
+  }
+  
   // 记录详细历史（可选，用于分析）
   const history = readDownloadHistory();
   history.push({
     filename,
     timestamp: now,
     ip,
-    userAgent
+    userAgent,
+    location
   });
   
   // 保留最近1000次历史记录（用于分析，不影响统计计数）

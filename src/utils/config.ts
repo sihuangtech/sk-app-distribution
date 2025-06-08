@@ -3,6 +3,9 @@
 interface Config {
   server: {
     backend_port: number;
+    frontend_port: number;
+    frontend_url: string;
+    backend_url: string;
   };
 }
 
@@ -47,11 +50,14 @@ export const getConfig = async (): Promise<Config> => {
 // 获取API基础URL
 export const getApiBaseUrl = async (): Promise<string> => {
   if (import.meta.env.DEV) {
-    // 开发环境：使用相对路径，由Vite代理处理
-    return '';
+    // 开发环境：从配置文件读取后端端口
+    const config = await getConfig();
+    const backendPort = config.server.backend_port;
+    return `http://localhost:${backendPort}`;
   } else {
-    // 生产环境：使用相对路径
-    return '';
+    // 生产环境：使用配置的后端URL
+    const config = await getConfig();
+    return config.server.backend_url;
   }
 };
 

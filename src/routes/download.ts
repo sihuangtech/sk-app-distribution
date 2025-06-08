@@ -47,7 +47,9 @@ const streamFile = (fullPath: string, res: Response, originalFilename: string, s
 
     // 记录下载统计（如果提供了req对象）
     if (req) {
-      recordDownload(originalFilename, req);
+      recordDownload(originalFilename, req).catch(error => {
+        console.error('Failed to record download:', error);
+      });
     }
 
     // 设置响应头

@@ -45,7 +45,9 @@ export default function settingsRouter(config: any) {
       // 直接返回配置文件中的实际值
       const clientConfig = {
         website: currentConfig.website,
-        upload: currentConfig.upload
+        upload: currentConfig.upload,
+        download: currentConfig.download,
+        geolocation: currentConfig.geolocation
       };
       
       res.json(clientConfig);
@@ -58,7 +60,7 @@ export default function settingsRouter(config: any) {
   // 更新系统配置
   router.put('/', (req: Request, res: Response) => {
     try {
-      const { website, upload } = req.body;
+      const { website, upload, download, geolocation } = req.body;
       
       // 验证必要字段
       if (!website || !upload) {
@@ -97,6 +99,38 @@ export default function settingsRouter(config: any) {
         return res.status(400).json({ message: '每个应用最大文件数必须在1-10000之间' });
       }
 
+      // 验证下载配置（如果提供）
+      if (download) {
+        if (typeof download.speed_limit_kbps !== 'number' || download.speed_limit_kbps < 0) {
+          return res.status(400).json({ message: '下载速度限制必须是非负数' });
+        }
+      }
+
+      // 验证地理信息配置（如果提供）
+      if (geolocation) {
+        if (typeof geolocation.enabled !== 'boolean') {
+          return res.status(400).json({ message: '地理信息启用状态必须是布尔值' });
+        }
+        
+        if (geolocation.enabled) {
+          const validProviders = ['ipapi', 'ipstack', 'ipgeolocation', 'ip2location'];
+          if (!validProviders.includes(geolocation.api_provider)) {
+            return res.status(400).json({ message: '无效的地理信息API提供商' });
+          }
+          
+          if ((geolocation.api_provider === 'ipstack' || geolocation.api_provider === 'ipgeolocation' || geolocation.api_provider === 'ip2location') && 
+              (!geolocation.api_key || geolocation.api_key.trim() === '')) {
+            return res.status(400).json({ message: `${geolocation.api_provider} 需要API密钥` });
+          }
+          
+          if (typeof geolocation.cache_duration !== 'number' || 
+              geolocation.cache_duration < 3600 || 
+              geolocation.cache_duration > 604800) {
+            return res.status(400).json({ message: '缓存时间必须在1小时到7天之间' });
+          }
+        }
+      }
+
       // 读取当前配置
       const currentConfig = readConfig();
       
@@ -115,6 +149,23 @@ export default function settingsRouter(config: any) {
         }
       };
 
+      // 更新下载配置（如果提供）
+      if (download) {
+        updatedConfig.download = {
+          speed_limit_kbps: parseInt(download.speed_limit_kbps) || 0
+        };
+      }
+
+      // 更新地理信息配置（如果提供）
+      if (geolocation) {
+        updatedConfig.geolocation = {
+          enabled: geolocation.enabled,
+          api_provider: geolocation.api_provider,
+          api_key: geolocation.api_key ? geolocation.api_key.trim() : '',
+          cache_duration: parseInt(geolocation.cache_duration) || 86400
+        };
+      }
+
       // 保存配置
       writeConfig(updatedConfig);
       
@@ -122,7 +173,9 @@ export default function settingsRouter(config: any) {
         message: '配置保存成功',
         config: {
           website: updatedConfig.website,
-          upload: updatedConfig.upload
+          upload: updatedConfig.upload,
+          download: updatedConfig.download,
+          geolocation: updatedConfig.geolocation
         }
       });
     } catch (error) {

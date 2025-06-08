@@ -175,16 +175,32 @@ router.post('/delete', (req: Request, res: Response) => {
   try {
     const { filePath } = req.body;
     
+    console.log('Delete request received, filePath:', filePath);
+    
     if (!filePath) {
       return res.status(400).json({ success: false, message: '文件路径不能为空。' });
     }
 
     const uploadsDir = path.join(process.cwd(), 'uploads');
-    // 移除开头的 '/' 如果存在，获取原始文件名
-    const originalFilename = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+    // 从URL或路径中提取文件名
+    let originalFilename: string;
+    if (filePath.startsWith('http://') || filePath.startsWith('https://')) {
+      // 如果是完整URL，提取最后的文件名部分并解码
+      const url = new URL(filePath);
+      originalFilename = decodeURIComponent(path.basename(url.pathname));
+    } else {
+      // 如果是相对路径，移除开头的 '/' 并解码
+      const pathWithoutSlash = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+      originalFilename = decodeURIComponent(pathWithoutSlash);
+    }
+    
+    console.log('Extracted filename:', originalFilename);
     
     // 直接使用原始文件名（不再有时间戳前缀）
     const fullPath = path.join(uploadsDir, originalFilename);
+    
+    console.log('Full file path:', fullPath);
+    console.log('File exists:', fs.existsSync(fullPath));
 
     // 安全检查：确保文件路径在uploads目录内
     if (!fullPath.startsWith(uploadsDir)) {
@@ -193,7 +209,10 @@ router.post('/delete', (req: Request, res: Response) => {
 
     // 检查文件是否存在
     if (!fs.existsSync(fullPath)) {
-      return res.status(404).json({ success: false, message: '文件不存在。' });
+      // 列出uploads目录中的所有文件进行调试
+      const files = fs.readdirSync(uploadsDir);
+      console.log('Files in uploads directory:', files);
+      return res.status(404).json({ success: false, message: `文件不存在: ${originalFilename}` });
     }
 
     // 删除文件
@@ -201,7 +220,9 @@ router.post('/delete', (req: Request, res: Response) => {
     
     // 同时删除元数据
     const metadata = readFileMetadata();
+    console.log('Current metadata:', metadata.map(m => ({ filename: m.filename, originalName: m.originalName })));
     const updatedMetadata = metadata.filter(meta => meta.filename !== originalFilename);
+    console.log('Updated metadata count:', updatedMetadata.length);
     saveFileMetadata(updatedMetadata);
     
     console.log('File deleted successfully:', fullPath);

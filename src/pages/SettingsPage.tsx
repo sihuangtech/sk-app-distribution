@@ -22,10 +22,19 @@ interface DownloadConfig {
   speed_limit_kbps: number; // 下载速度限制，单位：MB/s
 }
 
+// 地理信息配置接口
+interface GeolocationConfig {
+  enabled: boolean;
+  api_provider: string;
+  api_key: string;
+  cache_duration: number;
+}
+
 interface SystemConfig {
   website: WebsiteConfig;
   upload: UploadConfig;
   download?: DownloadConfig; // 添加 download 配置，注意是可选的，以兼容旧配置
+  geolocation?: GeolocationConfig; // 添加地理信息配置
 }
 
 // 预设的下载速度选项 (MB/s)
@@ -37,6 +46,14 @@ const predefinedDownloadSpeeds = [
   { value: 20, label: '20 MB/s' },
   { value: 50, label: '50 MB/s' },
   { value: 100, label: '100 MB/s' },
+];
+
+// 地理信息API提供商选项
+const geolocationProviders = [
+  { value: 'ipapi', label: 'IP-API (免费，无需密钥)' },
+  { value: 'ipstack', label: 'IPStack (需要密钥)' },
+  { value: 'ipgeolocation', label: 'IPGeolocation (需要密钥)' },
+  { value: 'ip2location', label: 'IP2Location (需要密钥)' },
 ];
 
 const SettingsPage: React.FC = () => {
@@ -113,10 +130,16 @@ const SettingsPage: React.FC = () => {
 
       if (response.ok) {
         const configData: SystemConfig = await response.json();
-        // 确保 download 属性存在并有默认值
+        // 确保 download 和 geolocation 属性存在并有默认值
         const initializedConfig = {
           ...configData,
-          download: configData.download || { speed_limit_kbps: 0 }
+          download: configData.download || { speed_limit_kbps: 0 },
+          geolocation: configData.geolocation || { 
+            enabled: false, 
+            api_provider: 'ipapi', 
+            api_key: '', 
+            cache_duration: 86400 
+          }
         };
         setConfig(initializedConfig);
         setEditConfig(initializedConfig);
@@ -151,10 +174,16 @@ const SettingsPage: React.FC = () => {
       });
 
       if (response.ok) {
-        // 更新 config 状态，确保 download 属性存在
+        // 更新 config 状态，确保 download 和 geolocation 属性存在
         setConfig({
           ...editConfig,
-          download: editConfig.download || { speed_limit_kbps: 0 }
+          download: editConfig.download || { speed_limit_kbps: 0 },
+          geolocation: editConfig.geolocation || { 
+            enabled: false, 
+            api_provider: 'ipapi', 
+            api_key: '', 
+            cache_duration: 86400 
+          }
         });
         setEditMode(false);
         showToast('配置保存成功', 'success');
@@ -173,11 +202,17 @@ const SettingsPage: React.FC = () => {
 
   // 取消编辑
   const cancelEdit = () => {
-    // 恢复 config 状态，确保 download 属性存在
+    // 恢复 config 状态，确保 download 和 geolocation 属性存在
     if (config) {
       setEditConfig({
         ...config,
-        download: config.download || { speed_limit_kbps: 0 }
+        download: config.download || { speed_limit_kbps: 0 },
+        geolocation: config.geolocation || { 
+          enabled: false, 
+          api_provider: 'ipapi', 
+          api_key: '', 
+          cache_duration: 86400 
+        }
       });
     }
     setEditMode(false);
@@ -466,6 +501,124 @@ const SettingsPage: React.FC = () => {
                   ) : (
                     <span className="setting-value">
                       {config.download?.speed_limit_kbps === 0 ? '不限制' : `${config.download?.speed_limit_kbps} MB/s`}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* 地理信息配置 - 新增部分 */}
+            <div className="settings-section">
+              <h3>地理信息配置</h3>
+              <div className="settings-grid">
+                <div className="setting-item">
+                  <label>启用地理信息显示:</label>
+                  {editMode ? (
+                    <div className="checkbox-input-group">
+                      <input
+                        type="checkbox"
+                        checked={editConfig?.geolocation?.enabled || false}
+                        onChange={(e) => setEditConfig(prev => prev ? {
+                          ...prev,
+                          geolocation: {
+                            ...(prev.geolocation || { enabled: false, api_provider: 'ipapi', api_key: '', cache_duration: 86400 }),
+                            enabled: e.target.checked
+                          }
+                        } : null)}
+                        title="是否在下载历史中显示IP地理信息"
+                      />
+                      <span className="checkbox-label">在下载历史中显示IP地理信息</span>
+                    </div>
+                  ) : (
+                    <span className="setting-value">
+                      {config.geolocation?.enabled ? '已启用' : '已禁用'}
+                    </span>
+                  )}
+                </div>
+
+                <div className="setting-item">
+                  <label>API提供商:</label>
+                  {editMode ? (
+                    <select
+                      value={editConfig?.geolocation?.api_provider || 'ipapi'}
+                      onChange={(e) => setEditConfig(prev => prev ? {
+                        ...prev,
+                        geolocation: {
+                          ...(prev.geolocation || { enabled: false, api_provider: 'ipapi', api_key: '', cache_duration: 86400 }),
+                          api_provider: e.target.value
+                        }
+                      } : null)}
+                      title="选择地理信息API提供商"
+                      disabled={!editConfig?.geolocation?.enabled}
+                    >
+                      {geolocationProviders.map(provider => (
+                        <option key={provider.value} value={provider.value}>{provider.label}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span className="setting-value">
+                      {geolocationProviders.find(p => p.value === config.geolocation?.api_provider)?.label || 'IP-API (免费，无需密钥)'}
+                    </span>
+                  )}
+                </div>
+
+                <div className="setting-item">
+                  <label>API密钥:</label>
+                  {editMode ? (
+                    <div className="api-key-input-group">
+                      <input
+                        type="password"
+                        value={editConfig?.geolocation?.api_key || ''}
+                        onChange={(e) => setEditConfig(prev => prev ? {
+                          ...prev,
+                          geolocation: {
+                            ...(prev.geolocation || { enabled: false, api_provider: 'ipapi', api_key: '', cache_duration: 86400 }),
+                            api_key: e.target.value
+                          }
+                        } : null)}
+                        placeholder={editConfig?.geolocation?.api_provider === 'ipapi' ? '免费服务，无需密钥' : '请输入API密钥'}
+                        title="API密钥（IP-API免费服务无需密钥）"
+                        disabled={!editConfig?.geolocation?.enabled || editConfig?.geolocation?.api_provider === 'ipapi'}
+                      />
+                      <span className="input-hint">
+                        {editConfig?.geolocation?.api_provider === 'ipapi' ? 
+                          'IP-API是免费服务，无需API密钥' : 
+                          '请在对应服务商官网申请API密钥'}
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="setting-value">
+                      {config.geolocation?.api_provider === 'ipapi' ? 
+                        '无需密钥' : 
+                        (config.geolocation?.api_key ? '已配置' : '未配置')}
+                    </span>
+                  )}
+                </div>
+
+                <div className="setting-item">
+                  <label>缓存时间 (小时):</label>
+                  {editMode ? (
+                    <div className="cache-duration-input-group">
+                      <input
+                        type="number"
+                        value={Math.floor((editConfig?.geolocation?.cache_duration || 86400) / 3600)}
+                        onChange={(e) => setEditConfig(prev => prev ? {
+                          ...prev,
+                          geolocation: {
+                            ...(prev.geolocation || { enabled: false, api_provider: 'ipapi', api_key: '', cache_duration: 86400 }),
+                            cache_duration: parseInt(e.target.value) * 3600 || 86400
+                          }
+                        } : null)}
+                        min="1"
+                        max="168"
+                        title="地理信息缓存时间（小时）"
+                        disabled={!editConfig?.geolocation?.enabled}
+                      />
+                      <span className="input-hint">缓存地理信息以减少API调用次数（1-168小时）</span>
+                    </div>
+                  ) : (
+                    <span className="setting-value">
+                      {Math.floor((config.geolocation?.cache_duration || 86400) / 3600)} 小时
                     </span>
                   )}
                 </div>

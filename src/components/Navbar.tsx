@@ -68,6 +68,12 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
             已上传应用
           </Link>
           <Link 
+            to="/stats" 
+            className={`navbar-item ${location.pathname === '/stats' ? 'active' : ''}`}
+          >
+            下载统计
+          </Link>
+          <Link 
             to="/settings" 
             className={`navbar-item ${location.pathname === '/settings' ? 'active' : ''}`}
           >

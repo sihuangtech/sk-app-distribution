@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; 2024 彩旗软件分发平台. 保留所有权利.</p>
+          <p>&copy; 2025 彩旗工作室. 保留所有权利.</p>
         </div>
       </div>
     </footer>

@@ -364,10 +364,73 @@
   gap: 20px;
 }
 
+/* 地理信息配置样式 */
+.checkbox-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-input-group input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.checkbox-label {
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.api-key-input-group,
+.cache-duration-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.api-key-input-group input,
+.cache-duration-input-group input {
+  margin: 0;
+}
+
+.setting-item select {
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: border-color 0.2s ease;
+  background-color: white;
+}
+
+.setting-item select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.setting-item select:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.setting-item input:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
   .version-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
+  }
+  
+  .checkbox-input-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 } 

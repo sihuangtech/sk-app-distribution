@@ -1,6 +1,8 @@
 server:
   backend_port: 4009
   frontend_port: 3009
+  frontend_url: https://download.skstudio.cn
+  backend_url: https://download.skstudio.cn
 website:
   domain: https://download.skstudio.cn
   title: 彩旗软件分发平台
@@ -30,3 +32,8 @@ jwt:
   secret: 3f3b8c1e-5a2d-4c8e-9b1e-1f3c4e5d6a7b
 download:
   speed_limit_kbps: 0
+geolocation:
+  enabled: true
+  api_provider: ipapi
+  api_key: ''
+  cache_duration: 86400
