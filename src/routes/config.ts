@@ -10,7 +10,10 @@ export default function configRouter(config: any) {
       // 直接返回配置文件中的实际值
       const clientConfig = {
         server: {
-          backend_port: config.server.backend_port
+          backend_port: config.server.backend_port,
+          frontend_port: config.server.frontend_port,
+          frontend_url: config.server.frontend_url,
+          backend_url: config.server.backend_url
         },
         website: config.website
       };
