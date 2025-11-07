@@ -1,6 +1,10 @@
 # SK Software Distribution & Download Platform
 
+<div align="center">
+
 **[简体中文版本](README_zh-CN.md)**
+
+</div>
 
 This is a modern web technology stack-based software distribution platform that provides developers with convenient application package upload, management, and distribution services. The platform supports multi-OS and architecture installer package management, provides secure user authentication and file downloads, and features flexible configuration management and file categorization filtering.
 
