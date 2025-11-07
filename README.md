@@ -1,95 +1,119 @@
-# 彩旗软件分发平台
+# SK Software Distribution & Download Platform
 
-这是一个基于现代Web技术栈构建的软件分发平台，为开发者提供便捷的应用包上传、管理和分发服务。平台支持多种操作系统和架构的安装包管理，并提供安全的用户认证和文件下载，以及灵活的配置管理和文件分类筛选功能。
+**[简体中文版本](README_zh-CN.md)**
 
-## 技术栈
+This is a modern web technology stack-based software distribution platform that provides developers with convenient application package upload, management, and distribution services. The platform supports multi-OS and architecture installer package management, provides secure user authentication and file downloads, and features flexible configuration management and file categorization filtering.
 
-### 后端技术
-- **Node.js** - 运行时环境
-- **Express.js** - Web应用框架
-- **TypeScript** - 类型安全的JavaScript超集
-- **Multer** - 文件上传中间件
-- **jsonwebtoken** - JWT身份认证
-- **js-yaml** - YAML配置文件解析
-- **CORS** - 跨域资源共享支持
-- **stream-throttle** - 下载速度限制
+## 🌐 Deployment Options
 
-### 前端技术
-- **React** - 用户界面库
-- **TypeScript** - 类型安全开发
-- **React Router** - 单页应用路由管理
-- **Vite** - 现代化构建工具和开发服务器
-- **CSS3** - 现代化样式设计
+### 🏠 Self-Hosted Version (Current)
+This is the open-source self-hosted version that you can deploy on your own server. Perfect for users who have their own infrastructure and want full control over their data and deployment.
 
-### 开发工具
-- **ES6 Modules** - 现代模块系统
-- **PM2** - 生产环境进程管理
-- **Nginx** - 反向代理和静态文件服务
+### ☁️ Official Cloud-Hosted Version (Provided by SK Studio)
+Don't have your own server or want to use it directly? We offer an official cloud-hosted version managed by SK Studio! 
 
-## 核心功能
+**Get Started:** [Register and Purchase Official Service](https://dist.skstudio.cn)
 
-- 🔐 **JWT身份认证** - 安全的用户登录和会话管理
-- 📁 **应用管理** - 创建、查看和管理应用项目
-- ⬆️ **文件上传** - 支持多种格式和平台架构的安装包上传，支持上传限制配置
-- 📋 **文件列表** - 查看、搜索和筛选已上传的文件
-- 🔗 **下载链接** - 自动生成简洁安全的下载链接，支持下载速度限制
-- 🎨 **现代化UI** - 响应式设计，支持多设备访问，提供友好的操作界面
-- ⚙️ **配置化部署** - 通过YAML文件统一管理配置，支持在线修改系统设置
-- 🚀 **生产就绪** - 支持PM2和Nginx生产环境部署，优化性能和稳定性
-- ✨ **文件分类筛选** - 根据应用、操作系统、架构、版本类型进行多维度筛选
-- 🛠️ **系统设置管理** - 通过Web界面动态配置网站信息、上传和下载限制
-- 📊 **版本信息监控** - 实时显示项目版本、运行环境、启动时间和运行模式等系统信息
+**Why Choose Our Official Cloud Service:**
+- ✅ **Managed by SK Studio** - Officially operated and maintained
+- ✅ **Zero Configuration** - No server setup required, ready to use
+- ✅ **Professional Support** - Direct technical support from our team
+- ✅ **Always Updated** - Latest features and security updates
+- ✅ **Reliable Infrastructure** - Enterprise-grade hosting environment
 
-## 项目结构
+**Contact Us:**
+- **Email:** contact@skstudio.cn
+- **QQ Group:** [Click here to join QQ Group](https://qm.qq.com/q/KSyXDRdYQI)
+- **Discord Server:** [Click here to join Discord](https://discord.gg/thWGWq7CwA)
 
-- `server.ts`: 后端 Express 服务器，处理文件上传、下载和API请求。
-- `index.html`: 前端应用的入口文件。
-- `src/main.tsx`: React 应用的主入口。
-- `src/App.tsx`: 包含主应用界面和路由配置的 React 组件。
-- `src/components/`: 包含各种可复用 React 组件的目录。
-- `src/pages/`: 包含主要页面组件的目录。
-- `src/routes/`: 后端 Express 路由处理函数目录。
-- `src/utils/`: 工具函数目录，包含配置读取、事件总线等。
-- `src/styles/`: 样式文件目录。
-- `uploads/`: 上传的文件将存储在此目录。
-- `data/`: 存储应用信息 (`apps.json`) 和文件元数据 (`file-metadata.json`)。
-- `config.yaml`: **配置文件，包含服务器端口、管理员账号、网站信息、上传和下载限制（必须配置）**。
-- `vite.config.ts`: Vite配置文件，用于前端构建和开发服务器。
-- `docs/`: 部署文档目录，包含详细的部署指南。
+## Technology Stack
 
-## 开发环境准备
+### Backend Technologies
+- **Node.js** - Runtime environment
+- **Express.js** - Web application framework
+- **TypeScript** - Type-safe JavaScript superset
+- **Multer** - File upload middleware
+- **jsonwebtoken** - JWT authentication
+- **js-yaml** - YAML configuration file parsing
+- **CORS** - Cross-origin resource sharing support
+- **stream-throttle** - Download speed limiting
 
-请确保你已经安装了 Node.js 和 npm。
+### Frontend Technologies
+- **React** - User interface library
+- **TypeScript** - Type-safe development
+- **React Router** - Single-page application routing
+- **Vite** - Modern build tool and development server
+- **CSS3** - Modern styling design
 
-## 安装依赖
+### Development Tools
+- **ES6 Modules** - Modern module system
+- **PM2** - Production environment process management
+- **Nginx** - Reverse proxy and static file service
 
-在项目根目录下运行以下命令安装所有依赖：
+## Core Features
+
+- 🔐 **JWT Authentication** - Secure user login and session management
+- 📁 **Application Management** - Create, view, and manage application projects
+- ⬆️ **File Upload** - Support multiple formats and platform architecture installer uploads with upload limit configuration
+- 📋 **File List** - View, search, and filter uploaded files
+- 🔗 **Download Links** - Auto-generate clean and secure download links with download speed limiting support
+- 🎨 **Modern UI** - Responsive design supporting multi-device access with friendly operation interface
+- ⚙️ **Configuration Deployment** - Unified configuration management through YAML files with online system settings modification
+- 🚀 **Production Ready** - Support PM2 and Nginx production deployment with optimized performance and stability
+- ✨ **File Categorization Filtering** - Multi-dimensional filtering by application, OS, architecture, and version type
+- 🛠️ **System Settings Management** - Dynamic configuration of website information, upload and download limits through web interface
+- 📊 **Version Information Monitoring** - Real-time display of project version, runtime environment, startup time, and operation mode
+
+## Project Structure
+
+- `server.ts`: Backend Express server handling file uploads, downloads, and API requests
+- `index.html`: Frontend application entry file
+- `src/main.tsx`: React application main entry
+- `src/App.tsx`: Main application interface and routing configuration React component
+- `src/components/`: Directory containing various reusable React components
+- `src/pages/`: Directory containing main page components
+- `src/routes/`: Backend Express route handler functions directory
+- `src/utils/`: Utility functions directory containing configuration reading, event bus, etc.
+- `src/styles/`: Styles files directory
+- `uploads/`: Uploaded files will be stored in this directory
+- `data/`: Stores application information (`apps.json`) and file metadata (`file-metadata.json`)
+- `config.yaml`: **Configuration file containing server port, admin account, website info, upload and download limits (must be configured)**
+- `vite.config.ts`: Vite configuration file for frontend building and development server
+- `docs/`: Deployment documentation directory containing detailed deployment guides
+
+## Development Environment Setup
+
+Please ensure you have Node.js and npm installed.
+
+## Install Dependencies
+
+Run the following command in the project root directory to install all dependencies:
 
 ```bash
 npm install
 ```
 
-## 配置设置
+## Configuration Setup
 
-在运行项目前，请先从 `config.yaml.example` 文件复制一份到 `config.yaml`，然后配置 `config.yaml` 文件。所有系统配置都在此文件中统一管理：
+Before running the project, please copy from `config.yaml.example` to `config.yaml`, then configure the `config.yaml` file. All system configurations are managed in this file:
 
 ```yaml
-# 服务器端口配置
+# Server port configuration
 server:
   backend_port: 4009
   frontend_port: 3009
-  frontend_url: https://your-domain.com  # 前端访问URL，用于生成下载链接等
-  backend_url: https://your-domain.com  # 后端API访问URL，用于前端API请求
+  frontend_url: https://your-domain.com  # Frontend access URL for generating download links, etc.
+  backend_url: https://your-domain.com  # Backend API access URL for frontend API requests
 
-# 网站信息配置
+# Website information configuration
 website:
-  domain: https://your-domain.com # 网站域名，用于生成完整的下载链接
-  title: 彩旗软件分发平台 # 网站标题
-  description: 为开发者提供便捷的应用包上传、管理和分发服务 # 网站描述
+  domain: https://your-domain.com # Website domain for generating complete download links
+  title: ColorFlag Distribution Platform # Website title
+  description: Provides developers with convenient application package upload, management, and distribution services # Website description
 
-# 文件上传限制配置
+# File upload limit configuration
 upload:
-  max_file_size: 5120 # 最大文件大小，单位：MB
+  max_file_size: 5120 # Maximum file size in MB
   allowed_extensions:
     - .exe
     - .msi
@@ -104,106 +128,106 @@ upload:
     - .zip
     - .tar.gz
     - .7z
-  max_files_per_app: 10000 # 每个应用允许的最大文件数量
+  max_files_per_app: 10000 # Maximum file count allowed per application
 
-# 文件下载配置
+# File download configuration
 download:
-  speed_limit_kbps: 0 # 下载速度限制，单位：KB/s，0表示不限制
+  speed_limit_kbps: 0 # Download speed limit in KB/s, 0 means no limit
 
-# 管理员账号配置
+# Admin account configuration
 admin:
-  username: your_admin_username # 请替换为你的管理员用户名
-  password: your_admin_password # 请替换为你的管理员密码
-  sessionDuration: 30 # 登录有效期（天数）
+  username: your_admin_username # Please replace with your admin username
+  password: your_admin_password # Please replace with your admin password
+  sessionDuration: 30 # Login validity period in days
 
-# JWT认证配置
+# JWT authentication configuration
 jwt:
-  secret: your_jwt_secret_key_here # 请替换为你的JWT密钥，务必修改为一个复杂且安全的字符串！
+  secret: your_jwt_secret_key_here # Please replace with your JWT key, be sure to change to a complex and secure string!
 
-# 地理信息配置
+# Geolocation configuration
 geolocation:
-  enabled: true # 是否启用IP地理信息查询功能
-  api_provider: ipapi # 地理信息API提供商：ipapi, ipstack, ipgeolocation, ip2location
-  api_key: '' # API密钥 (ipapi免费，无需密钥，其他需要)
-  cache_duration: 86400 # 地理信息缓存时长，单位：秒 (默认24小时，即86400秒)
+  enabled: true # Whether to enable IP geolocation query function
+  api_provider: ipapi # Geolocation API provider: ipapi, ipstack, ipgeolocation, ip2location
+  api_key: '' # API key (ipapi is free, no key needed, others require)
+  cache_duration: 86400 # Geolocation cache duration in seconds (default 24 hours, i.e., 86400 seconds)
 ```
 
-**⚠️ 重要：在运行项目前，必须先配置 `config.yaml` 文件。所有关键配置（包括端口、管理员账号、JWT密钥）都在此文件中统一管理。**
+**⚠️ Important: Before running the project, you must configure the `config.yaml` file. All critical configurations (including ports, admin account, JWT key) are managed in this file.**
 
-**重要说明**：
-- ✅ **前后端端口完全从 `config.yaml` 文件读取，代码中无任何硬编码端口**
-- ✅ **前端通过Vite代理自动转发API请求到后端端口**
-- ✅ **生产环境和开发环境统一使用相对路径**
-- ✅ **修改配置只需更新配置文件或在设置页面修改，无需修改代码**
-- ❌ **如果配置文件缺失、格式错误或关键配置项缺失，服务器将拒绝启动**
+**Important Notes**:
+- ✅ **Frontend and backend ports are completely read from the `config.yaml` file, no hard-coded ports in code**
+- ✅ **Frontend automatically forwards API requests to backend port through Vite proxy**
+- ✅ **Production and development environments use relative paths uniformly**
+- ✅ **Modify configuration by updating config file or through settings page, no code changes needed**
+- ❌ **If config file is missing, format is wrong, or critical configuration items are missing, server will refuse to start**
 
-## 运行项目
+## Run Project
 
-推荐使用以下命令同时启动后端服务器和前端开发服务器：
+Recommend using the following command to start both backend server and frontend development server:
 
 ```bash
 npm run dev
 ```
 
-这将同时启动后端服务器和前端应用，端口均从配置文件读取。
+This will start both backend server and frontend application, ports are read from configuration file.
 
-你也可以单独启动后端或前端：
+You can also start backend or frontend separately:
 
-1.  **启动后端服务器：**
+1.  **Start backend server:**
 
 ```bash
 npm start
 ```
 
-2.  **启动前端开发服务器：**
+2.  **Start frontend development server:**
 
 ```bash
 npm run frontend-dev
 ```
 
-## 功能说明
+## Feature Description
 
-- **用户登录：** 开发者需要使用 `config.yaml` 中配置的管理员账号登录才能使用平台。会话有效期为配置的天数（默认30天）。
-- **应用管理：** 可以创建、查看和管理应用，每个应用可以上传多个版本的安装包。
-- **文件上传：** 登录后可以通过上传页面选择应用并上传安装包。支持通过设置页面配置最大文件大小、允许的扩展名以及每个应用的最大文件数量。
-- **文件管理：** 在"已上传应用"页面查看、搜索和按应用、操作系统、架构、版本类型对已上传的文件进行多维度筛选。支持复制下载链接和删除文件。
-- **文件下载：** 提供简洁的下载链接，支持通过设置页面配置下载速度限制（单位：MB/s）。
-- **下载统计：** 详细的下载统计功能，包括文件下载次数、下载历史记录、IP地理信息显示等。支持按时间、文件类型等多维度筛选。
-- **地理信息：** 可选的IP地理信息显示功能，支持多个API提供商（IP-API、IPStack、IPGeolocation），智能缓存减少API调用。
-- **系统设置：** 提供Web界面 `/settings`，管理员登录后可以动态查看和修改网站信息、文件上传限制、下载速度限制和地理信息配置。配置修改实时生效。
-- **版本信息：** 在设置页面底部显示详细的系统版本信息，包括项目版本、Node.js版本、前后端框架版本、服务启动时间和运行模式（开发/生产），以2行4列布局展示。
-- **动态配置：** 前后端通过读取 `config.yaml` 实现动态配置，无需硬编码。
+- **User Login:** Developers need to use the admin account configured in `config.yaml` to login to use the platform. Session validity period is configured days (default 30 days).
+- **Application Management:** Can create, view, and manage applications, each application can upload multiple version installer packages.
+- **File Upload:** After login, can select application and upload installer packages through upload page. Support configuring max file size, allowed extensions, and max files per application through settings page.
+- **File Management:** In "Uploaded Applications" page view, search, and multi-dimensional filter uploaded files by application, OS, architecture, version type. Support copy download links and delete files.
+- **File Download:** Provide clean download links, support configuring download speed limit (in MB/s) through settings page.
+- **Download Statistics:** Detailed download statistics including file download count, download history, IP geolocation display, etc. Support multi-dimensional filtering by time, file type, etc.
+- **Geolocation:** Optional IP geolocation display function, support multiple API providers (IP-API, IPStack, IPGeolocation), intelligent caching reduces API calls.
+- **System Settings:** Provide web interface `/settings`, admin can dynamically view and modify website information, file upload limits, download speed limits, and geolocation configuration after login. Configuration changes take effect immediately.
+- **Version Information:** Display detailed system version information at bottom of settings page, including project version, Node.js version, frontend/backend framework versions, service startup time, and operation mode (development/production), displayed in 2x4 layout.
+- **Dynamic Configuration:** Frontend and backend implement dynamic configuration by reading `config.yaml`, no hard-coding needed.
 
-## 页面导航
+## Page Navigation
 
-- **/upload**：文件上传界面，支持新建应用和选择现有应用上传文件。
-- **/apps**：应用管理页面，查看和管理应用列表。
-- **/stats**：下载统计页面，查看下载统计概览、文件统计和下载历史记录（需要登录）。
-- **/settings**：系统设置页面，管理网站、上传、下载和地理信息配置（需要登录）。
-- **/list**：已上传文件列表页面，查看、筛选和管理文件（已合并到 /apps 页面）。
+- **/upload**: File upload interface, support creating new applications and selecting existing applications for file upload
+- **/apps**: Application management page, view and manage application list
+- **/stats**: Download statistics page, view download statistics overview, file statistics, and download history (login required)
+- **/settings**: System settings page, manage website, upload, download, and geolocation configuration (login required)
+- **/list**: Uploaded files list page, view, filter, and manage files (merged into /apps page)
 
-## 应用管理
+## Application Management
 
-### 新建应用
-1. 在上传页面或应用管理页面点击"新建应用"按钮
-2. 填写应用信息：
-   - **应用名称**：用于内部标识，只能包含字母、数字、下划线和连字符
-   - **显示名称**：用户看到的应用名称
-   - **应用描述**：可选，简要描述应用功能
-3. 点击"创建应用"完成创建
+### Create New Application
+1. Click "New Application" button on upload page or application management page
+2. Fill in application information:
+   - **Application Name**: Used for internal identification, can only contain letters, numbers, underscores, and hyphens
+   - **Display Name**: Application name visible to users
+   - **Application Description**: Optional, brief description of application functionality
+3. Click "Create Application" to complete creation
 
-### 应用数据存储
-- 应用信息存储在 `data/apps.json` 文件中
-- 支持应用的增删查改操作
-- 每个应用包含唯一ID、名称、显示名称、描述和创建时间
-- 文件元数据存储在 `data/file-metadata.json` 文件中，包含原始文件名、系统文件名、所属应用、平台信息、上传时间等。
+### Application Data Storage
+- Application information stored in `data/apps.json` file
+- Support application CRUD operations
+- Each application contains unique ID, name, display name, description, and creation time
+- File metadata stored in `data/file-metadata.json` file, containing original filename, system filename, belonging application, platform information, upload time, etc.
 
-## 注意事项
+## Notes
 
-- 请确保在生产环境中使用强密码并定期更换。
-- 建议在生产环境中使用 HTTPS 协议。
-- **所有关键配置统一在 `config.yaml` 中管理，或通过设置页面修改。**
+- Please ensure using strong passwords in production environment and change regularly.
+- Recommend using HTTPS protocol in production environment.
+- **All critical configurations are managed in `config.yaml` or modified through settings page.**
 
-## 项目部署
+## Project Deployment
 
-详细的部署指南请参考：[部署文档](docs/deployment.md) 
+For detailed deployment guide, please refer to: [Deployment Documentation](docs/deployment.md)
